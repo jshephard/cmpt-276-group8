@@ -11,19 +11,19 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151013202506) do
+ActiveRecord::Schema.define(version: 20151013204921) do
 
   create_table "events", force: :cascade do |t|
     t.string   "Title"
     t.string   "Description"
-    t.integer  "Latitude"
-    t.integer  "Longitude"
+    t.decimal  "Latitude",    precision: 6
+    t.decimal  "Longitude",   precision: 6
     t.string   "Category"
     t.integer  "Day"
     t.integer  "Month"
     t.integer  "Year"
-    t.datetime "created_at",  null: false
-    t.datetime "updated_at",  null: false
+    t.datetime "created_at",                null: false
+    t.datetime "updated_at",                null: false
   end
 
 end

@@ -21,27 +21,27 @@
   </div>
   <div class="field">
     <%= f.label :Latitude %><br>
-    <%= f.number_field :Latitude %>
+    <%= f.number_field :Latitude, max:90, min:-90 %>
   </div>
   <div class="field">
     <%= f.label :Longitude %><br>
-    <%= f.number_field :Longitude %>
+    <%= f.number_field :Longitude, max:180, min:-180 %>
   </div>
   <div class="field">
     <%= f.label :Category %><br>
-    <%= f.text_field :Category %>
+    <%= f.select :Category, [['Party','Party'],['Emergency','Emergency']] %>
   </div>
   <div class="field">
     <%= f.label :Day %><br>
-    <%= f.number_field :Day %>
+    <%= f.select :Day, ((1..31).map {|i| [i,i] } ) %>
   </div>
   <div class="field">
     <%= f.label :Month %><br>
-    <%= f.number_field :Month %>
+    <%= f.select :Month, ((1..12).map {|i| [i,i] } ) %>
   </div>
   <div class="field">
     <%= f.label :Year %><br>
-    <%= f.number_field :Year %>
+    <%= f.select :Year, ((2015..2100).map {|i| [i,i] } )%>
   </div>
   <div class="actions">
     <%= f.submit %>
