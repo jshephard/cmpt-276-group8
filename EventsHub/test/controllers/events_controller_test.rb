@@ -3,7 +3,6 @@ require 'test_helper'
 class EventsControllerTest < ActionController::TestCase
   setup do
     @event = events(:one)
-    @newevent = Event.new(Title: "New Event", Latitude: 15.123456, Longitude: 90.123456, Description: "A new event.", Category: "Party", Day: 15, Month: 6, Year: 2016 )
   end
 
   test "should get index" do
@@ -46,31 +45,6 @@ class EventsControllerTest < ActionController::TestCase
     end
 
     assert_redirected_to events_path
-  end
-  
-  # Our created tests
-  
-  test "should be valid" do
-    assert @newevent.valid?
-  end
-  
-  test "event title should be <= 20 chars and > 0 chars" do
-    @newevent.Title = "a" * 25
-    assert_not @newevent.valid?
-    @newevent.Title = ""
-    assert_not @newevent.valid?
-  end
-  
-  test "event description should <= 140 chars" do
-    @newevent.Description = "a" * 200
-    assert_not @newevent.valid?
-  end
-  
-  test "event day should be <= 31 and > 0" do
-    @newevent.Day = 32
-    assert_not @newevent.valid?
-    @newevent.Day = -1
-    assert_not @newevent.valid?
   end
   
 end
