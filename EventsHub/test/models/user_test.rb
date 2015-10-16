@@ -6,6 +6,11 @@ class UserTest < ActiveSupport::TestCase
                       email: 'john.doe@dotcom.com', first_name: 'John', last_name: 'Doe', date_of_birth: '1990-10-01')
   end
 
+  test 'valid user can be saved' do
+    assert @user.valid?
+    assert @user.save
+  end
+
   test 'no duplicate usernames' do
     dupe = @user.dup
     dupe.username = dupe.username.upcase
@@ -22,7 +27,6 @@ class UserTest < ActiveSupport::TestCase
     assert dupe.invalid?
   end
 
-  # Below are basic validations (presence & length)
   test 'username presence' do
     @user.username = ' ' * 6
     assert @user.invalid?
@@ -36,6 +40,13 @@ class UserTest < ActiveSupport::TestCase
   test 'username above maximum length' do
     @user.username = 'a' * 21
     assert @user.invalid?
+  end
+
+  test 'username becomes downcase after save' do
+    username = 'JOHNDOE'
+    @user.username = username.downcase
+    @user.save
+    assert_equal username.downcase, @user.reload.username
   end
 
   test 'password presence' do

@@ -1,1 +1,15 @@
-<h1>todo</h1>
+<h1>Users Index</h1>
+<% if logged_in? %>
+    Logged in!<br/>
+    <% if current_user.is_promoter? %>
+        Is a promoter!
+    <% else %>
+        Not a promoter!
+    <% end %>
+    <br/>
+    <% if current_user.is_administrator? %>
+        Is an admin!
+    <% else %>
+        Not an admin!
+    <% end %>
+<% end %>

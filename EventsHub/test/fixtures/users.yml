@@ -10,8 +10,8 @@ one:
 
 two:
   username: 12john_doe34
-  password_digest: MyString
-  email: MyString
-  first_name: MyString
-  last_name: MyString
-  date_of_birth: 2015-10-13
+  password_digest: p@ssword
+  email: jdoe@jdoe.com
+  first_name: John
+  last_name: Doe
+  date_of_birth: 1915-10-13

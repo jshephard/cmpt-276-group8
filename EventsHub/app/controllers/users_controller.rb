@@ -1,4 +1,6 @@
 class UsersController < ApplicationController
+  #before_filter :require_admin, only: [:edit]
+
   # GET /users
   def index
   end
@@ -21,6 +23,7 @@ class UsersController < ApplicationController
 
   private
     def user_params
-      params.require(:user).permit(:username, :password, :password_confirmation, :first_name, :last_name, :date_of_birth, :email)
+      params.require(:user).permit(:username, :password, :password_confirmation, :first_name, :last_name,
+                                   :date_of_birth, :email)
     end
 end
