@@ -20,6 +20,10 @@
     <%= f.text_field :Description %>
   </div>
   <div class="field">
+    <%= f.label :Address %><br>
+    <%= f.text_field :Address %>
+  </div>
+  <div class="field">
     <%= f.label :Latitude %><br>
     <%= f.number_field :Latitude, max:90, min:-90 %>
   </div>
