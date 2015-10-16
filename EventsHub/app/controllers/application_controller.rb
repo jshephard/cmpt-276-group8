@@ -13,6 +13,12 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  def require_logged_out
+    if logged_in?
+      redirect_to root
+    end
+  end
+
   def require_promoter
     unless logged_in?
       flash.now[:error] = 'You must be logged in to access this page.'

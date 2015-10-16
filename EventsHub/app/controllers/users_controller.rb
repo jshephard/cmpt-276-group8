@@ -1,5 +1,6 @@
 class UsersController < ApplicationController
   #before_filter :require_admin, only: [:edit]
+  before_filter :require_logged_out, only: [:new, :create]
 
   # GET /users
   def index
@@ -14,10 +15,17 @@ class UsersController < ApplicationController
   def create
     @user = User.new(user_params)
 
-    if @user.save then
-      render 'index'
-    else
-      render 'new'
+    respond_to do |format|
+      if @user.save then
+        flash.now[:message] = 'User successfully created.'
+        format.html { render 'index' , flash }
+        format.json { render json: { :message => 'User successfully created', :redirect => users_path } }
+      else
+        flash.now[:message] = 'There was an error signing up.'
+        format.html { render 'new' , flash }
+        format.json { render json: { :errors => @user.errors, :messages => @user.errors.full_messages},
+                             status: :unprocessable_entity }
+      end
     end
   end
 

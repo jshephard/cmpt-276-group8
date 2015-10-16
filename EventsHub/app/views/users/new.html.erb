@@ -1,7 +1,39 @@
 <h1>User Registration</h1>
-<%= form_for(@user) do |f| %>
+<script>
+  function render_errors(form_label, error) {
+    <% # Reset all text field colors %>
+    $('#signup_form').find('input:text').css("background-color", "");
+
+    var html = '<h3>' + Object.keys(error.messages).length + ' errors occurred:</h3>';
+    html += '<ul>';
+    $.each(error.messages, function(key, value) {
+      html += '<li>' + value + '</li>';
+    });
+
+    <% # Highlight all text field that have errors %>
+    $.each(error.errors, function(key, value) {
+      $('#' + form_label + key).css("background-color", "red");
+    });
+
+    html += '</ul>';
+    return html;
+  }
+
+    $(document).ready(function() {
+        $('#signup_form').on('ajax:success', function (event, data, status, xhr) {
+            $('#error_explanation').html('<b>' + data.message + '</b>');
+            // Delay the redirect to inform user of successful login.
+            setTimeout(function() { window.location.replace(data.redirect) }, 1000);
+        });
+        $('#signup_form').on('ajax:error', function (event, data, status, xhr) {
+            console.log(data.responseJSON);
+            $('#error_explanation').html(render_errors('user_', data.responseJSON));
+        });
+    });
+</script>
+<%= form_for @user, html: {id: 'signup_form', :'data-type' => 'json'}, remote: true do |f| %>
+    <div id="error_explanation">
     <% if @user.errors.any? %>
-        <div id="error_explanation">
           <h2><%= pluralize(@user.errors.count, "error") %> prohibited this user from registering:</h2>
 
           <ul>
@@ -9,8 +41,8 @@
                 <li><%= message %></li>
             <% end %>
           </ul>
-        </div>
     <% end %>
+    </div>
 
     <div class="field">
       <%= f.label :username %><br>

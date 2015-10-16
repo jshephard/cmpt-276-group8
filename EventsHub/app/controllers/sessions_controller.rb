@@ -1,9 +1,9 @@
 class SessionsController < ApplicationController
+  before_filter :require_logged_out, except: [:destroy]
+  before_filter :require_login, only: [:destroy]
+
   # GET /login
   def new
-    if logged_in?
-      redirect_to users_path
-    end
   end
 
   # POST /login
@@ -16,10 +16,16 @@ class SessionsController < ApplicationController
       end
       login(user)
 
-      redirect_to users_path
+      respond_to do |format|
+        format.html { redirect_to users_path, notice: 'Logged in successfully.' }
+        format.json { render :json => { :redirect => users_path, :message => 'Logged in successfully.' } }
+      end
     else
       flash.now[:error] = 'Username and/or password is incorrect.'
-      render 'new'
+      respond_to do |format|
+        format.html { render 'new' , flash }
+        format.json { render json: { :message => flash.now[:error] }, status: :unprocessable_entity }
+      end
     end
   end
 
