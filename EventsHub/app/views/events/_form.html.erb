@@ -41,7 +41,7 @@
   </div>
   <div class="field">
     <%= f.label :Month %><br>
-    <%= f.select :Month, ((1..12).map {|i| [i,i] } ) %>
+    <%= f.select :Month, (1..12).map {|i| [I18n.t("date.month_names")[i], i]} %>
   </div>
   <div class="field">
     <%= f.label :Year %><br>
