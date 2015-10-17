@@ -11,9 +11,10 @@ class User < ActiveRecord::Base
 
   # This regular expression checks for the presence of either: a number, a capital, or a symbol
   VALID_PASSWORD_REGEX = /((?=.*\d)|(?=.*[A-Z])|(?=.*[!@#\$%^&*()-_+={}\[\]|\\:;"'<,>.?\/~`]).)/
-  validates :password, presence: true, length: { minimum: 8 }, on: :create,
-            format: { with: VALID_PASSWORD_REGEX,
+  validates :password, presence: true, length: { minimum: 8 }, on: :create, format: { with: VALID_PASSWORD_REGEX,
                       message: 'must contain either a digit, a capital letter or a symbol.'}
+  validates :password, length: { minimum: 8 }, on: :update, allow_blank: true,
+            format: { with: VALID_PASSWORD_REGEX, message: 'must contain either a digit, a capital letter or a symbol.'}
 
   #todo some more validations here, e.g. maximum length
   validates :first_name, presence: true

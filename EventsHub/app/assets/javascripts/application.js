@@ -14,3 +14,25 @@
 //= require jquery_ujs
 //= require turbolinks
 //= require_tree .
+
+function reset_textbox_background(form_label) {
+    $('#' + form_label + 'form').find('input:text').css("background-color", "");
+    $('#' + form_label + 'form').find('input:password').css("background-color", "");
+}
+
+function render_errors(form_label, error) {
+    reset_textbox_background(form_label);
+
+    var html = '<h3>' + Object.keys(error.messages).length + ' errors occurred:</h3>';
+    html += '<ul>';
+    $.each(error.messages, function(key, value) {
+        html += '<li>' + value + '</li>';
+    });
+
+    $.each(error.errors, function(key, value) {
+        $('#' + form_label + key).css("background-color", "red");
+    });
+
+    html += '</ul>';
+    return html;
+}
