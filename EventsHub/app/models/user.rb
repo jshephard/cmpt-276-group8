@@ -13,6 +13,7 @@ class User < ActiveRecord::Base
   VALID_PASSWORD_REGEX = /((?=.*\d)|(?=.*[A-Z])|(?=.*[!@#\$%^&*()-_+={}\[\]|\\:;"'<,>.?\/~`]).)/
   validates :password, presence: true, length: { minimum: 8 }, on: :create, format: { with: VALID_PASSWORD_REGEX,
                       message: 'must contain either a digit, a capital letter or a symbol.'}
+  # This validates when a user attempts to update their profile. Here, if the password is blank it doesn't update.
   validates :password, length: { minimum: 8 }, on: :update, allow_blank: true,
             format: { with: VALID_PASSWORD_REGEX, message: 'must contain either a digit, a capital letter or a symbol.'}
 

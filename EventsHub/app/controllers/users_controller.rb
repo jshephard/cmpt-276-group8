@@ -5,6 +5,10 @@ class UsersController < ApplicationController
 
   # GET /users
   def index
+    if logged_in? and current_user.is_administrator?
+      page = params[:page].nil? ? 1 : params[:page]
+      @users = User.page(page)
+    end
   end
 
   # GET /register or /users/new
@@ -17,6 +21,7 @@ class UsersController < ApplicationController
     if current_user.is_administrator?
       if @user.nil?
         flash.now[:error] = 'User does not exist.'
+        redirect_to users_path
       end
     elsif @user.id != current_user.id
       flash.now[:error] = 'You do not have permission to view this page.'
@@ -24,13 +29,17 @@ class UsersController < ApplicationController
     end
   end
 
+  # PATCH/PUT /users/[id]
   def update
+    promoter_save = true
+    admin_save = true
+
     unless current_user.is_administrator?
       if @user.id != current_user.id
         respond_to do |format|
-          flash.now[:message] = 'There was an error while save the edits.'
+          flash.now[:message] = 'You do not have permission to view this page.'
           format.html { render edit  }
-          format.json { render json: { :message => 'There was an error while saving the edits.' },
+          format.json { render json: { :message => 'You do not have permission to view this page.' },
                                status: :unprocessable_entity }
         end
         return
@@ -43,15 +52,34 @@ class UsersController < ApplicationController
         end
         return
       end
+    else
+      if params[:user][:is_promoter] == '1'
+        if !@user.is_promoter?
+          promoter = Promoter.new(user_id: @user.id)
+          promoter_save = promoter.save()
+        end
+      elsif params[:user][:is_promoter] == '0'
+        Promoter.where(user_id: @user.id).destroy_all
+      end
+
+      if params[:user][:is_administrator] == '1'
+        if !@user.is_administrator?
+          admin = Administrator.new(user_id: @user.id)
+          admin_save = admin.save()
+        end
+      elsif params[:user][:is_administrator] == '0' and @user.id != current_user.id
+        # Administrators cannot remove themselves from power
+        Administrator.where(user_id: @user.id).destroy_all
+      end
     end
 
     respond_to do |format|
-      if @user.update(user_params)
+      if @user.update(user_params) and promoter_save and admin_save
         flash.now[:message] = 'Successfully edited.'
         format.html { render 'edit' , flash }
         format.json { render json: { :message => 'Successfully edited.' } }
       else
-        flash.now[:message] = 'There was an error while save the edits.'
+        flash.now[:message] = 'There was an error while saving the edits.'
         format.html { render 'edit' , flash }
         format.json { render json: { :errors => @user.errors, :messages => @user.errors.full_messages},
                              status: :unprocessable_entity }
@@ -84,6 +112,7 @@ class UsersController < ApplicationController
                                    :date_of_birth, :email)
     end
 
+    # Used to set @user for some of the functions that require it
     def set_user
       @user = current_user
       if params[:id] # users can go to /profile as well

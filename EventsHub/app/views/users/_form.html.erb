@@ -17,16 +17,26 @@
     </div>
     <% if logged_in? # so it's explicit in the user editor it's a new password %>
         <div class="field">
-          <%= f.label "New Password" %><br>
+          <%= f.label 'New Password' %><br>
           <%= f.password_field :password %>
         </div>
         <div class="field">
-          <%= f.label "Confirm New Password" %><br>
+          <%= f.label 'Confirm New Password' %><br>
           <%= f.password_field :password_confirmation %>
         </div>
-        <% unless current_user.is_administrator? %>
+        <% if current_user.is_administrator? %>
+            <%= f.label 'User groups' %><br>
+            <div class="field">
+              <%= f.check_box :is_promoter? %>
+              <%= f.label 'Is A Promoter' %>
+            </div>
+            <div class="field">
+              <%= f.check_box :is_administrator?, :disabled => (current_user.id == @user.id) %>
+              <%= f.label 'Is An Admin' %>
+            </div>
+        <% else %>
         <div class="field">
-          <%= f.label "Old Password" %><br>
+          <%= f.label 'Old Password' %><br>
           <%= f.password_field :old_password %>
         </div>
         <% end %>
