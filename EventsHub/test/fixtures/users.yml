@@ -2,7 +2,7 @@
 
 one:
   username: jane_doe123
-  password_digest: 1password
+  password_digest: <%= BCrypt::Password.create('!password', cost: 4) %>
   email: email@school.com
   first_name: Jane
   last_name: Doe
@@ -10,7 +10,7 @@ one:
 
 two:
   username: 12john_doe34
-  password_digest: p@ssword
+  password_digest: <%= BCrypt::Password.create('!password', cost: 4) %>
   email: jdoe@jdoe.com
   first_name: John
   last_name: Doe

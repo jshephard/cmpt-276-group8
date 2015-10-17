@@ -36,6 +36,8 @@ gem 'kaminari'
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development
 
+gem 'puma'
+
 group :development, :test do
 	gem 'activerecord-jdbcsqlite3-adapter', platforms: [:jruby]
 	gem 'sqlite3', platforms: [:ruby]
@@ -45,7 +47,7 @@ group :development, :test do
 end
 
 group :production do
-    gem 'pg',             '0.17.1', platforms: [:ruby]
-    gem 'activerecord-jdbcpostgresql-adapter', platforms: [:jruby]
-    gem 'rails_12factor', '0.0.2'
+  gem 'pg',             '0.17.1', platforms: [:ruby]
+  gem 'activerecord-jdbcpostgresql-adapter', platforms: [:jruby]
+  gem 'rails_12factor', '0.0.2'
 end
