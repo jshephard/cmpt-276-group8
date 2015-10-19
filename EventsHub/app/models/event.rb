@@ -3,7 +3,7 @@ class TimeValidator < ActiveModel::Validator
     startTime = record.StartHour * 60 + record.StartMinute
     endTime = record.EndHour * 60 + record.EndMinute
     
-    if startTime > endTime
+    if startTime >= endTime
       record.errors[:base] << "Starting time is before ending time."
     end
     
@@ -17,16 +17,15 @@ class Event < ActiveRecord::Base
     validates :Latitude, numericality: { greater_than_or_equal_to: -90, less_than_or_equal_to: 90 }
     validates :Longitude, numericality: { greater_than_or_equal_to: -180, less_than_or_equal_to: 180 }
     
-    validates :StartHour, numericality: { only_integer: true, greater_than_or_equal_to: 0, less_than: 24 }
-    validates :EndHour, numericality: { only_integer: true, greater_than_or_equal_to: 0, less_than: 24 }
-    validates :StartMinute, numericality: { only_integer: true, greater_than_or_equal_to: 0, less_than: 60 }
-    validates :EndMinute, numericality: { only_integer: true, greater_than_or_equal_to: 0, less_than: 60 }
+    validates :StartHour, numericality: { greater_than_or_equal_to: 0, less_than: 24 }
+    validates :EndHour, numericality: { greater_than_or_equal_to: 0, less_than: 24 }
+    validates :StartMinute, numericality: { greater_than_or_equal_to: 0, less_than: 60 }
+    validates :EndMinute, numericality: { greater_than_or_equal_to: 0, less_than: 60 }
     
     validates_with TimeValidator
     
-    validates :Day, numericality: { only_integer: true, greater_than: 0, less_than_or_equal_to: 31 }
-    validates :Month, numericality: { only_integer: true, greater_than: 0, less_than_or_equal_to: 12 }
-    validates :Year, numericality: { only_integer: true }
+    validates :Day, numericality: { greater_than: 0, less_than_or_equal_to: 31 }
+    validates :Month, numericality: { greater_than: 0, less_than_or_equal_to: 12 }
     
     validates :Description, :Latitude, :Longitude, :Title, :StartHour, :StartMinute, :EndHour, :EndMinute, presence: true
 end
