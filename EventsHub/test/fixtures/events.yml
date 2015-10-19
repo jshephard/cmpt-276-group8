@@ -20,17 +20,18 @@
 #   Month: 1
 #   Year: 1
 
-#(Title: "New Event", Latitude: 15.123456, Longitude: 90.123456, Description: "A new event.", Category: "Party", Day: 15, Month: 6, Year: 2016, StartHour: 12, StartMinute: 30, EndHour: 12, EndMinute: 30 )
-
 newevent:
   Title: "New Event"
   Latitude: 15.123456
   Longitude: 90.123456
   Description: "A new event."
   Category: "Party"
-  Day: 15
-  Month: 6
-  Year: 2016
+  StartDay: 15
+  StartMonth: 6
+  StartYear: 2016
+  EndDay: 15
+  EndMonth: 6
+  EndYear: 2016
   StartHour: 12
   StartMinute: 30
   EndHour: 12
