@@ -15,7 +15,7 @@ class ApplicationController < ActionController::Base
 
   def require_logged_out
     if logged_in?
-      redirect_to root
+      redirect_to root_path
     end
   end
 
@@ -26,7 +26,7 @@ class ApplicationController < ActionController::Base
     else
       unless current_user.is_promoter? or current_user.is_administrator?
         flash.now[:error] = 'You cannot access this page.'
-        redirect_to root
+        redirect_to root_path
       end
     end
   end
@@ -38,7 +38,7 @@ class ApplicationController < ActionController::Base
     else
       unless current_user.is_administrator?
         flash.now[:error] = 'You cannot access this page.'
-        redirect_to root
+        redirect_to root_path
       end
     end
   end

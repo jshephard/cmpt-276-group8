@@ -25,7 +25,7 @@ class UsersController < ApplicationController
       end
     elsif @user.id != current_user.id
       flash.now[:error] = 'You do not have permission to view this page.'
-      redirect_to root
+      redirect_to root_path
     end
   end
 
