@@ -21,6 +21,9 @@
   #month {
     width:100%;
   }
+  #time {
+    width:100%;
+  }
 </style>
 
 
@@ -59,7 +62,7 @@
       
       <div class="field">
         <%= f.label :Category %><br>
-        <%= f.select :Category, ['Party','Emergency'] %>
+        <%= f.select :Category, ['Concert','Emergency','Festival','Party'] %>
       </div>
       
       <div id="latlong">
@@ -87,6 +90,17 @@
         <div class="field" style="float: left; width:33%">
           <%= f.label :Year %><br>
           <%= f.select :Year, ((2015..2100).map {|i| [i,i] } )%>
+        </div>
+      </div>
+      
+      <div id="time">
+        <div class="field" style="float: left; width:50%">
+          Starting Time:<br>
+          <%= f.number_field :StartHour, max:23, min:0 %>:<%= f.number_field :StartMinute, max:59, min:0 %>
+        </div>
+        <div class="field" style="float: left; width:50%">
+          Ending Time:<br>
+          <%= f.number_field :EndHour, max:23, min:0 %>:<%= f.number_field :EndMinute, max:59, min:0 %>
         </div>
       </div>
       

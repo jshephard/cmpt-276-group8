@@ -45,5 +45,15 @@
   <%= @event.Year %>
 </p>
 
+<p>
+  <strong>Start Time:</strong>
+  <%= @event.StartHour %>:<%= @event.StartMinute %>
+</p>
+
+<p>
+  <strong>End Time:</strong>
+  <%= @event.EndHour %>:<%= @event.EndMinute %>
+</p>
+
 <%= link_to 'Edit', edit_event_path(@event) %> |
 <%= link_to 'Back', events_path %>
