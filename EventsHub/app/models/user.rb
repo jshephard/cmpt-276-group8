@@ -2,6 +2,12 @@ class User < ActiveRecord::Base
   # Don't use these directly. Instead, call is_admin? or is_promoter?
   # Used to avoid hitting DB multiple times
   attr_accessor :admin, :promoter
+  
+  # has_one only requires to actually have one if validated. We only want this so that if a user is deleted
+  # their entries within those tables are deleted as well.
+  has_one :promoter, dependent: :destroy
+  has_one :administrator, dependent: :destroy
+  has_many :events
 
   has_secure_password
   before_save { email.downcase! }

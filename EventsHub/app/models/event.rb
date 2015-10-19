@@ -11,6 +11,8 @@ class TimeValidator < ActiveModel::Validator
 end
 
 class Event < ActiveRecord::Base
+    belongs_to :user
+    
     validates :Title, length: { in: 3..80 }
     validates :Description, length: { maximum:200 }
     
