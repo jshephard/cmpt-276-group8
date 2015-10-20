@@ -1,5 +1,3 @@
-<!DOCTYPE html>
-<html lang="en-US">
 <style>
 
   table {
@@ -15,6 +13,52 @@
   }
   
 </style>
+<script>
+    var page = 0;
+
+    function get_page(next)
+    {
+        if (next)
+            page++;
+        else if (page > 1)
+            page--;
+        else
+            return;
+
+        $("#events-table-body").html("");
+        $.getJSON("<%= request.path %>.json?page=" + page, function(data) {
+            $.each(data, function (key, value) {
+                $("#events-table-body").append("<tr>" +
+                        "<td>" + value['Title'] + "</td>" +
+                        "<td>" + value['Description'] + "</td>" +
+                        "<td>" + value['Address'] + "</td>" +
+                        "<td>" + value['Latitude'] + "</td>" +
+                        "<td>" + value['Longitude'] + "</td>" +
+                        "<td>" + value['Category'] + "</td>" +
+                        "<td>" + value['StartDay'] + "</td>" +
+                        "<td>" + value['StartMonth'] + "</td>" +
+                        "<td>" + value['StartYear'] + "</td>" +
+                        "<td>" + value['EndDay'] + "</td>" +
+                        "<td>" + value['EndMonth'] + "</td>" +
+                        "<td>" + value['EndYear'] + "</td>" +
+                        "<td>" + value['StartHour'] + ":" + value['StartMinute'] + "</td>" +
+                        "<td>" + value['EndHour'] + ":" + value['EndMinute'] + "</td>" +
+                        "<td><a href='" + value['show_url'] + "'>Show</a></td>" +
+                        "<td><a href='" + value['edit_url'] + "'>Edit</a></td>" +
+                        "<td><a data-confirm='Are you sure?' rel='nofollow' data-method='delete' href='"+ value['destroy_url'] + "'>Destroy</a></td>" +
+                        "</tr>");
+            });
+        }).fail(function() {
+            alert("An error occurred fetching the events list.");
+        });
+    }
+
+    $(document).ready(function() {
+        $('#prev-page').click(function(){ get_page(false); return false; });
+        $('#next-page').click(function(){ get_page(true); return false; });
+        get_page(true);
+    });
+</script>
 <p id="notice"><%= notice %></p>
 
 <h1>Listing Events</h1>
@@ -28,36 +72,21 @@
       <th>Latitude</th>
       <th>Longitude</th>
       <th>Category</th>
-      <th>Day</th>
-      <th>Month</th>
-      <th>Year</th>
+      <th>Start Day</th>
+      <th>Start Month</th>
+      <th>Start Year</th>
+      <th>End Day</th>
+      <th>End Month</th>
+      <th>End Year</th>
       <th>Start Time</th>
       <th>End Time</th>
       <th colspan="3"></th>
     </tr>
   </thead>
 
-  <tbody>
-    <% @events.each do |event| %>
-      <tr>
-        <td><%= event.Title %></td>
-        <td><%= event.Description %></td>
-        <td><%= event.Address %></td>
-        <td><%= event.Latitude %></td>
-        <td><%= event.Longitude %></td>
-        <td><%= event.Category %></td>
-        <td><%= event.Day %></td>
-        <td><%= event.Month %></td>
-        <td><%= event.Year %></td>
-        <td><%= event.StartHour %>:<%= event.StartMinute %></td>
-        <td><%= event.EndHour %>:<%= event.EndMinute %></td>
-        <td><%= link_to 'Show', event %></td>
-        <td><%= link_to 'Edit', edit_event_path(event) %></td>
-        <td><%= link_to 'Destroy', event, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-      </tr>
-    <% end %>
-  </tbody>
+  <tbody id="events-table-body" />
 </table>
+<a id="prev-page">Previous Page</a> | <a id="next-page">Next Page</a>
 
 <br>
 

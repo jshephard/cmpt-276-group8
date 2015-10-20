@@ -42,4 +42,8 @@ class ApplicationController < ActionController::Base
       end
     end
   end
+
+  def set_page
+    @page = params[:page].nil? ? 1 : params[:page]
+  end
 end

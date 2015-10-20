@@ -1,5 +1,41 @@
 <h1>Users Index</h1>
 <% if logged_in? and current_user.is_administrator? %>
+    <script>
+      var page = 0;
+
+      function get_page(next)
+      {
+          if (next)
+            page++;
+          else if (page > 1)
+            page--;
+          else
+            return;
+
+          $("#users-table-body").html("");
+          $.getJSON("<%= request.path %>.json?page=" + page, function(data) {
+              $.each(data, function (key, value) {
+                  $("#events-table-body").append("<tr>" +
+                      "<td>" + value['username'] + "</td>" +
+                      "<td>" + value['email'] + "</td>" +
+                      "<td>" + value['first_name'] + "</td>" +
+                      "<td>" + value['last_name'] + "</td>" +
+                      "<td>" + value['is_administrator?'] + "</td>" +
+                      "<td>" + value['is_promoter?'] + "</td>" +
+                      "<td><a href='" + value['edit_url'] + "'>Edit</a></td>" +
+                      "</tr>");
+              });
+          }).fail(function() {
+              alert("An error occurred fetching the user list.");
+          });
+      }
+
+      $(document).ready(function() {
+          $('#prev-page').click(function(){ get_page(false); return false; });
+          $('#next-page').click(function(){ get_page(true); return false; });
+          get_page(true);
+      });
+    </script>
     <table>
       <thead>
           <tr>
@@ -12,18 +48,7 @@
             <th/>
           </tr>
       </thead>
-      <tbody>
-        <% @users.each do |user| %>
-        <tr>
-          <td><%= user.username %></td>
-          <td><%= user.email %></td>
-          <td><%= user.first_name %></td>
-          <td><%= user.last_name %></td>
-          <td><%= user.is_administrator? ? 'Yes' : 'No' %></td>
-          <td><%= user.is_promoter? ? 'Yes' : 'No' %></td>
-          <td><%= link_to 'Edit', edit_user_path(user) %></td>
-        </tr>
-        <% end %>
-      </tbody>
+      <tbody id="users-table-body" />
     </table>
+    <a id="prev-page">Previous Page</a> | <a id="next-page">Next Page</a>
 <% end %>

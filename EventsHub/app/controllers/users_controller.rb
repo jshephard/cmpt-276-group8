@@ -2,12 +2,12 @@ class UsersController < ApplicationController
   before_filter :require_logged_out, only: [:new, :create]
   before_filter :require_login, only: [:edit, :update]
   before_action :set_user, only: [:edit, :update]
+  before_action :set_page, only: [:index]
 
   # GET /users
   def index
-    if logged_in? and current_user.is_administrator?
-      page = params[:page].nil? ? 1 : params[:page]
-      @users = User.page(page)
+    if logged_in? and current_user.is_administrator? and request.format.json?
+      @users = User.page(@page)
     end
   end
 
