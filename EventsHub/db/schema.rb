@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151019204000) do
+ActiveRecord::Schema.define(version: 20151019205523) do
 
   create_table "administrators", force: :cascade do |t|
     t.integer  "user_id"
@@ -20,17 +20,17 @@ ActiveRecord::Schema.define(version: 20151019204000) do
   end
 
   create_table "events", force: :cascade do |t|
-    t.string   "Title"
-    t.text     "Description"
-    t.decimal  "Latitude",    precision: 6
-    t.decimal  "Longitude",   precision: 6
-    t.string   "Category"
+    t.string   "Title",       limit: 255
+    t.text     "Description", limit: 255
+    t.decimal  "Latitude",                precision: 6
+    t.decimal  "Longitude",               precision: 6
+    t.string   "Category",    limit: 255
     t.integer  "StartDay"
     t.integer  "StartMonth"
     t.integer  "StartYear"
-    t.datetime "created_at",                null: false
-    t.datetime "updated_at",                null: false
-    t.string   "Address"
+    t.datetime "created_at",                            null: false
+    t.datetime "updated_at",                            null: false
+    t.string   "Address",     limit: 255
     t.integer  "StartMinute"
     t.integer  "StartHour"
     t.integer  "EndMinute"
@@ -38,7 +38,10 @@ ActiveRecord::Schema.define(version: 20151019204000) do
     t.integer  "EndDay"
     t.integer  "EndMonth"
     t.integer  "EndYear"
+    t.integer  "user_id"
   end
+
+  add_index "events", ["user_id"], name: "index_events_on_user_id"
 
   create_table "promoters", force: :cascade do |t|
     t.integer  "user_id"
@@ -47,15 +50,15 @@ ActiveRecord::Schema.define(version: 20151019204000) do
   end
 
   create_table "users", force: :cascade do |t|
-    t.string   "username"
-    t.string   "password_digest"
-    t.string   "email"
-    t.string   "first_name"
-    t.string   "last_name"
+    t.string   "username",        limit: 255
+    t.string   "password_digest", limit: 255
+    t.string   "email",           limit: 255
+    t.string   "first_name",      limit: 255
+    t.string   "last_name",       limit: 255
     t.date     "date_of_birth"
-    t.datetime "created_at",      null: false
-    t.datetime "updated_at",      null: false
-    t.string   "session_token"
+    t.datetime "created_at",                  null: false
+    t.datetime "updated_at",                  null: false
+    t.string   "session_token",   limit: 255
   end
 
 end

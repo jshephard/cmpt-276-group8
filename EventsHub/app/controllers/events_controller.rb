@@ -4,7 +4,11 @@ class EventsController < ApplicationController
   # GET /events
   # GET /events.json
   def index
-    @events = Event.all
+    if params[:user_id]
+      @events = Event.where(user_id: params[:user_id])
+    else
+      @events = Event.all
+    end
   end
 
   # GET /events/1
@@ -25,6 +29,10 @@ class EventsController < ApplicationController
   # POST /events.json
   def create
     @event = Event.new(event_params)
+    
+    if logged_in?
+      @event.user_id = current_user.id
+    end
 
     respond_to do |format|
       if @event.save
@@ -35,6 +43,12 @@ class EventsController < ApplicationController
         format.json { render json: @event.errors, status: :unprocessable_entity }
       end
     end
+  end
+  
+  # GET /events/user/1
+  # GET /events/user/1.json
+  def list
+    @events = Event.where(user: params[:id])
   end
 
   # PATCH/PUT /events/1
