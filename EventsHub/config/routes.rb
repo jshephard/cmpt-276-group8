@@ -1,7 +1,9 @@
 Rails.application.routes.draw do
     resources :mapsview
-   # root 'welcome#index'
+    #root 'welcome#index'
+
   resources :events
+    root 'events#index'
   get 'login' => 'sessions#new'
   post 'login' => 'sessions#create'
   get 'logout' => 'sessions#destroy'
@@ -14,7 +16,6 @@ Rails.application.routes.draw do
   # See how all your routes lay out with "rake routes".
 
   # You can have the root of your site routed with "root"
-  root 'events#index'
 
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'

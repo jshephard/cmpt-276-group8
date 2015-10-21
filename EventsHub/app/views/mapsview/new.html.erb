@@ -24,6 +24,25 @@
       #legend img {
         vertical-align: middle;
       }
+        
+        #links {
+        font-family: Arial, sans-serif;
+        font-size: 15px;
+        background: #fff;
+        padding: 10px;
+        margin: 10px;
+        border: 3px solid #000;
+      }
+      #links h3 {
+        margin-top: 0;
+      }
+      #links img {
+        vertical-align: middle;
+      }
+        
+        
+        
+        
     </style>
     <script src="https://maps.googleapis.com/maps/api/js"></script>
     <script>
@@ -92,15 +111,51 @@
           div.innerHTML = '<img src="' + icon + '"> ' + name;
           legend.appendChild(div);
         }
-
+          
+                
         map.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push(legend);
+          
+          
+          
+          var linkIcons = {
+          Login: {
+            name: 'Login'
+          },
+          Logout: {
+            name: 'Logout'
+          },
+          Signup: {
+            name: 'Sign Up'
+          },
+          EventsLists: {
+          	name: 'Events List'
+          },
+          Notifications: {
+          	name: 'Notifications'
+          }
+        };
+
+        var links = document.getElementById('links');
+        for (var key in linkIcons) {
+          var type = linkIcons[key];
+          var name = type.name;
+          var div = document.createElement('div');
+          div.innerHTML = name;
+          links.appendChild(div);
+        }
+          
+                
+        map.controls[google.maps.ControlPosition.LEFT_TOP].push(links);
+          
       }
 
       google.maps.event.addDomListener(window, 'load', initialize);
     </script>
   </head>
-  <body>
-    <div id="map"></div>
-    <div id="legend"><h3>EventsHub</h3></div>
-  </body>
+    <body>
+            <div id="map"></div>
+            <div id="legend"><h3>EventsHub</h3></div>
+            <div id="links"><h3>Links</h3></div>
+
+    </body>
 </html>
