@@ -80,18 +80,33 @@
       
       <div id="month">
         <div class="field" style="float: left; width:33%">
-          <%= f.label :Day %><br>
-          <%= f.select :Day, ((1..31).map {|i| [i,i] } ) %>
+          <%= f.label :StartDay %><br>
+          <%= f.select :StartDay, ((1..31).map {|i| [i,i] } ) %>
         </div>
         <div class="field" style="float: left; width:33%">
-          <%= f.label :Month %><br>
-          <%= f.select :Month, (1..12).map {|i| [I18n.t("date.month_names")[i], i]} %>
+          <%= f.label :StartMonth %><br>
+          <%= f.select :StartMonth, (1..12).map {|i| [I18n.t("date.month_names")[i], i]} %>
         </div>
         <div class="field" style="float: left; width:33%">
-          <%= f.label :Year %><br>
-          <%= f.select :Year, ((2015..2100).map {|i| [i,i] } )%>
+          <%= f.label :StartYear %><br>
+          <%= f.select :StartYear, ((2015..2100).map {|i| [i,i] } )%>
         </div>
       </div>
+
+        <div id="month">
+          <div class="field" style="float: left; width:33%">
+            <%= f.label :EndDay %><br>
+            <%= f.select :EndDay, ((1..31).map {|i| [i,i] } ) %>
+          </div>
+          <div class="field" style="float: left; width:33%">
+            <%= f.label :EndMonth %><br>
+            <%= f.select :EndMonth, (1..12).map {|i| [I18n.t("date.month_names")[i], i]} %>
+          </div>
+          <div class="field" style="float: left; width:33%">
+            <%= f.label :EndYear %><br>
+            <%= f.select :EndYear, ((2015..2100).map {|i| [i,i] } )%>
+          </div>
+        </div>
       
       <div id="time">
         <div class="field" style="float: left; width:50%">

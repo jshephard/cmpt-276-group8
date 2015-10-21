@@ -1,10 +1,18 @@
 class EventsController < ApplicationController
   before_action :set_event, only: [:show, :edit, :update, :destroy]
+  before_action :set_page, only: [:index]
 
   # GET /events
   # GET /events.json
   def index
-    @events = Event.all
+    # We're gonna use json to load events in the background
+    if request.format.json?
+      if params[:user_id]
+        @events = Event.where(user_id: params[:user_id]).page(@page)
+      else
+        @events = Event.page(@page)
+      end
+    end
   end
 
   # GET /events/1
@@ -25,6 +33,10 @@ class EventsController < ApplicationController
   # POST /events.json
   def create
     @event = Event.new(event_params)
+    
+    if logged_in?
+      @event.user_id = current_user.id
+    end
 
     respond_to do |format|
       if @event.save
@@ -35,6 +47,12 @@ class EventsController < ApplicationController
         format.json { render json: @event.errors, status: :unprocessable_entity }
       end
     end
+  end
+  
+  # GET /events/user/1
+  # GET /events/user/1.json
+  def list
+    @events = Event.where(user: params[:id])
   end
 
   # PATCH/PUT /events/1
@@ -69,6 +87,6 @@ class EventsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def event_params
-      params.require(:event).permit(:Title, :Description, :Address, :Latitude, :Longitude, :Category, :Day, :Month, :Year, :StartHour, :StartMinute, :EndHour, :EndMinute)
+      params.require(:event).permit(:Title, :Description, :Address, :Latitude, :Longitude, :Category, :StartDay, :StartMonth, :StartYear, :EndDay, :EndMonth, :EndYear, :StartHour, :StartMinute, :EndHour, :EndMinute)
     end
 end
