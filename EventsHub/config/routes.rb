@@ -1,9 +1,9 @@
 Rails.application.routes.draw do
     resources :mapsview
-    #root 'welcome#index'
+    root 'mapsview#new'
 
   resources :events
-    root 'events#index'
+    #root 'events#index'
   get 'login' => 'sessions#new'
   post 'login' => 'sessions#create'
   get 'logout' => 'sessions#destroy'

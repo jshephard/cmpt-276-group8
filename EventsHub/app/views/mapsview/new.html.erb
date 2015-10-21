@@ -119,19 +119,19 @@
           
           var linkIcons = {
           Login: {
-            name: 'Login'
+            name: <%= link_to 'Login', login %>
           },
           Logout: {
-            name: 'Logout'
+            name: <%= link_to 'Logout', logout %>
           },
           Signup: {
-            name: 'Sign Up'
+              name: <%= link_to 'Sign up', register %>
           },
           EventsLists: {
-          	name: 'Events List'
+              name: <%= link_to 'Edit Event', events %>
           },
           Notifications: {
-          	name: 'Notifications'
+              name: <%= link_to 'Notifications', events %>
           }
         };
 
