@@ -113,25 +113,22 @@
         }
           
                 
-        map.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push(legend);
-          
-          
+        map.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push(legend);  
           
           var linkIcons = {
           Login: {
-            name: <%= link_to 'Login', login %>
-          },
-          Logout: {
-            name: <%= link_to 'Logout', logout %>
+              name:'<a href="login">Login</a>'
+          },Logout: {
+            name:'<a href="logout">Logout</a>'
           },
           Signup: {
-              name: <%= link_to 'Sign up', register %>
+              name:'<a href="register">Sign up</a>'
           },
           EventsLists: {
-              name: <%= link_to 'Edit Event', events %>
+              name:'<a href="events">Edit Events</a>'
           },
           Notifications: {
-              name: <%= link_to 'Notifications', events %>
+              name:'<a href="events">Notifications</a>'
           }
         };
 
