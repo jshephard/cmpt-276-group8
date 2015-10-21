@@ -1,6 +1,6 @@
 Rails.application.routes.draw do
     resources :mapsview
-    root 'welcome#index'
+   # root 'welcome#index'
   resources :events
   get 'login' => 'sessions#new'
   post 'login' => 'sessions#create'
