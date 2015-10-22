@@ -1,22 +1,27 @@
 Rails.application.routes.draw do
+    resources :mapsview
+    root 'mapsview#new'
+
   resources :events
-  
+    #root 'events#index'
+
   get 'login' => 'sessions#new'
   post 'login' => 'sessions#create'
   get 'logout' => 'sessions#destroy'
+    get "main" => 'mapsview#new'
 
   get 'register' => 'users#new'
   get 'profile' => 'users#edit'
-  
+
   resources :users do
-    resources :events, only: [:index]
+      resources  :mapsview, :events, only: [:index]
   end
+    
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 
   # You can have the root of your site routed with "root"
-  root 'events#index'
 
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'
