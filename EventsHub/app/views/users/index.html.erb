@@ -15,7 +15,7 @@
           $("#users-table-body").html("");
           $.getJSON("<%= request.path %>.json?page=" + page, function(data) {
               $.each(data, function (key, value) {
-                  $("#events-table-body").append("<tr>" +
+                  $("#users-table-body").append("<tr>" +
                       "<td>" + value['username'] + "</td>" +
                       "<td>" + value['email'] + "</td>" +
                       "<td>" + value['first_name'] + "</td>" +
@@ -23,6 +23,7 @@
                       "<td>" + value['is_administrator?'] + "</td>" +
                       "<td>" + value['is_promoter?'] + "</td>" +
                       "<td><a href='" + value['edit_url'] + "'>Edit</a></td>" +
+                      "<td><a href='" + value['user_events_url'] + "'>Events</a></td>" +
                       "</tr>");
               });
           }).fail(function() {
