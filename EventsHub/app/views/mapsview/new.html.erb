@@ -1,10 +1,4 @@
 
-<!DOCTYPE html>
-<html>
-  <head>
-    <title>Styling the Base Map</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <meta charset="utf-8">
     <style>
       html, body, #map {
         margin: 0;
@@ -44,8 +38,7 @@
         
         
     </style>
-    <script src="https://maps.googleapis.com/maps/api/js"></script>
-    <script>
+    <script type="text/javascript">
       var map;
       function initialize() {
         map = new google.maps.Map(document.getElementById('map'), {
@@ -116,19 +109,28 @@
         map.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push(legend);  
           
           var linkIcons = {
-          Login: {
-              name:'<a href="login">Login</a>'
-          },Logout: {
-            name:'<a href="logout">Logout</a>'
-          },
-          Signup: {
-              name:'<a href="register">Sign up</a>'
-          },
+          <% if !logged_in? %>
+            Login: {
+                name:'<a href="login">Login</a>'
+            },
+            Signup: {
+                name:'<a href="register">Sign up</a>'
+            },
+          <% else %>
+            Logout: {
+              name:'<a href="logout">Logout</a>'
+            },
+            <% if current_user.is_administrator? %>
+              Users: {
+                name:'<a href="users">User List</a>'
+              },
+            <% end %>
+          <% end %>
           EventsLists: {
               name:'<a href="events/new">Add Events</a>'
           },
           Notifications: {
-              name:'<a href="">Notifications - NA </a>'
+              name:'<a>Notifications - NA </a>'
           }
         };
 
@@ -144,14 +146,13 @@
                 
         map.controls[google.maps.ControlPosition.LEFT_TOP].push(links);
       }
-      google.maps.event.addDomListener(window, 'load', initialize);
     </script>
-  </head>
+    <script async defer
+      src="https://maps.googleapis.com/maps/api/js?callback=initialize">
+    </script>
     <body>
-        <A HREF="javascript:history.go(0)">Click to refresh the page</A>
             <div id="map"></div>
             <div id="legend"><h3>EventsHub</h3></div>
             <div id="links"><h3>Links</h3></div>
 
     </body>
-</html>

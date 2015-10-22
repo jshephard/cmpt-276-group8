@@ -17,8 +17,8 @@ class SessionsController < ApplicationController
       login(user)
 
       respond_to do |format|
-        format.html { redirect_to users_path, notice: 'Logged in successfully.' }
-        format.json { render :json => { :redirect => users_path, :message => 'Logged in successfully.' } }
+        format.html { redirect_to root_path, notice: 'Logged in successfully.' }
+        format.json { render :json => { :redirect => root_path, :message => 'Logged in successfully.' } }
       end
     else
       flash.now[:error] = 'Username and/or password is incorrect.'

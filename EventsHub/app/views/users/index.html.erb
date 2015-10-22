@@ -1,55 +1,54 @@
 <h1>Users Index</h1>
-<% if logged_in? and current_user.is_administrator? %>
-    <script>
-      var page = 0;
+<script>
+  var page = 0;
 
-      function get_page(next)
-      {
-          if (next)
-            page++;
-          else if (page > 1)
-            page--;
-          else
-            return;
+  function get_page(next)
+  {
+      if (next)
+        page++;
+      else if (page > 1)
+        page--;
+      else
+        return;
 
-          $("#users-table-body").html("");
-          $.getJSON("<%= request.path %>.json?page=" + page, function(data) {
-              $.each(data, function (key, value) {
-                  $("#users-table-body").append("<tr>" +
-                      "<td>" + value['username'] + "</td>" +
-                      "<td>" + value['email'] + "</td>" +
-                      "<td>" + value['first_name'] + "</td>" +
-                      "<td>" + value['last_name'] + "</td>" +
-                      "<td>" + value['is_administrator?'] + "</td>" +
-                      "<td>" + value['is_promoter?'] + "</td>" +
-                      "<td><a href='" + value['edit_url'] + "'>Edit</a></td>" +
-                      "<td><a href='" + value['user_events_url'] + "'>Events</a></td>" +
-                      "</tr>");
-              });
-          }).fail(function() {
-              alert("An error occurred fetching the user list.");
+      $("#users-table-body").html("");
+      $.getJSON("<%= request.path %>.json?page=" + page, function(data) {
+          $.each(data, function (key, value) {
+              $("#users-table-body").append("<tr>" +
+                  "<td>" + value['username'] + "</td>" +
+                  "<td>" + value['email'] + "</td>" +
+                  "<td>" + value['first_name'] + "</td>" +
+                  "<td>" + value['last_name'] + "</td>" +
+                  "<td>" + value['is_administrator?'] + "</td>" +
+                  "<td>" + value['is_promoter?'] + "</td>" +
+                  "<td><a href='" + value['edit_url'] + "'>Edit</a></td>" +
+                  "<td><a href='" + value['user_events_url'] + "'>Events</a></td>" +
+                  "</tr>");
           });
-      }
-
-      $(document).ready(function() {
-          $('#prev-page').click(function(){ get_page(false); return false; });
-          $('#next-page').click(function(){ get_page(true); return false; });
-          get_page(true);
+      }).fail(function() {
+          alert("An error occurred fetching the user list.");
       });
-    </script>
-    <table>
-      <thead>
-          <tr>
-            <th>Username</th>
-            <th>Email</th>
-            <th>First name</th>
-            <th>Last name</th>
-            <th>Admin</th>
-            <th>Promoter</th>
-            <th/>
-          </tr>
-      </thead>
-      <tbody id="users-table-body" />
-    </table>
-    <a id="prev-page">Previous Page</a> | <a id="next-page">Next Page</a>
-<% end %>
+  }
+
+  $(document).ready(function() {
+      $('#prev-page').click(function(){ get_page(false); return false; });
+      $('#next-page').click(function(){ get_page(true); return false; });
+      get_page(true);
+  });
+</script>
+<%= link_to 'Back to Map', root_path %>
+<table>
+  <thead>
+      <tr>
+        <th>Username</th>
+        <th>Email</th>
+        <th>First name</th>
+        <th>Last name</th>
+        <th>Admin</th>
+        <th>Promoter</th>
+        <th/>
+      </tr>
+  </thead>
+  <tbody id="users-table-body" />
+</table>
+<a id="prev-page">Previous Page</a> | <a id="next-page">Next Page</a>

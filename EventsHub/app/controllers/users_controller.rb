@@ -1,12 +1,13 @@
 class UsersController < ApplicationController
   before_filter :require_logged_out, only: [:new, :create]
   before_filter :require_login, only: [:edit, :update]
+  before_filter :require_admin, only: [:index]
   before_action :set_user, only: [:edit, :update]
   before_action :set_page, only: [:index]
 
   # GET /users
   def index
-    if logged_in? and current_user.is_administrator? and request.format.json?
+    if request.format.json?
       @users = User.page(@page)
     end
   end
@@ -95,8 +96,8 @@ class UsersController < ApplicationController
       if @user.save then
         login(@user) #Automatically log in the user
         flash.now[:message] = 'User successfully created.'
-        format.html { render 'index' , flash }
-        format.json { render json: { :message => 'User successfully created', :redirect => users_path } }
+        format.html { redirect_to root_path, flash }
+        format.json { render json: { :message => 'User successfully created', :redirect => root_path } }
       else
         flash.now[:message] = 'There was an error signing up.'
         format.html { render 'new' , flash }
