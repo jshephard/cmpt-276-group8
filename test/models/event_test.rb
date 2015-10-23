@@ -177,7 +177,7 @@ class EventTest < ActiveSupport::TestCase
     @event.StartHour = 8
     @event.StartMinute = 30
     @event.EndHour = 8
-    @event.EndHour = 30
+    @event.EndMinute = 30
     assert_not @event.valid?
     
     # dates are not the same

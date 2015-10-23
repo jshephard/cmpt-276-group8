@@ -48,6 +48,17 @@ class UserTest < ActiveSupport::TestCase
     @user.save
     assert_equal username.downcase, @user.reload.username
   end
+  
+  test 'username may only contain a-zA-Z0-9 and -_' do
+    @user.username = 'John Doe'
+    assert @user.invalid?
+    @user.username = 'john$doe'
+    assert @user.invalid?
+    @user.username = 'john!doe'
+    assert @user.invalid?
+    @user.username = 'john\ndoe'
+    assert @user.invalid?
+  end
 
   test 'password presence' do
     @user.password = ' ' * 8

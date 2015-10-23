@@ -12,8 +12,11 @@ class User < ActiveRecord::Base
   has_secure_password
   before_save { email.downcase! }
   before_save { username.downcase! }
-  # Todo valid username regex (i.e. only a-zA-Z0-9, - and _)
-  validates :username, presence: true, uniqueness: { case_sensitive: false }, length: { minimum: 5, maximum: 20 }
+  
+  # Username may only contain a-z,0-9, - and _
+  VALID_USERNAME_REGEX = /\A[a-z0-9\-_]+\z/i
+  validates :username, presence: true, uniqueness: { case_sensitive: false }, length: { minimum: 5, maximum: 20 },
+            format: { with: VALID_USERNAME_REGEX, message: 'may only contain letters, numbers, - and _.' }
 
   # This regular expression checks for the presence of either: a number, a capital, or a symbol
   VALID_PASSWORD_REGEX = /((?=.*\d)|(?=.*[A-Z])|(?=.*[!@#\$%^&*()-_+={}\[\]|\\:;"'<,>.?\/~`]).)/
