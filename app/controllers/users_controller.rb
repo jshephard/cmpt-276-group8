@@ -1,8 +1,8 @@
 class UsersController < ApplicationController
   before_filter :require_logged_out, only: [:new, :create]
-  before_filter :require_login, only: [:edit, :update]
+  before_filter :require_login, only: [:edit, :update, :destroy]
   before_filter :require_admin, only: [:index]
-  before_action :set_user, only: [:edit, :update]
+  before_action :set_user, only: [:edit, :update, :destroy]
   before_action :set_page, only: [:index]
 
   # GET /users
@@ -21,12 +21,10 @@ class UsersController < ApplicationController
   def edit
     if current_user.is_administrator?
       if @user.nil?
-        flash.now[:error] = 'User does not exist.'
-        redirect_to users_path
+        redirect_to users_path, alert: 'User does not exist.'
       end
     elsif @user.id != current_user.id
-      flash.now[:error] = 'You do not have permission to view this page.'
-      redirect_to root_path
+      redirect_to root_path, alert: 'You do not have permission to view this page.'
     end
   end
 
@@ -38,16 +36,15 @@ class UsersController < ApplicationController
     unless current_user.is_administrator?
       if @user.id != current_user.id
         respond_to do |format|
-          flash.now[:message] = 'You do not have permission to view this page.'
-          format.html { render edit  }
+          format.html { redirect_to root_path, alert: 'You do not have permission to view this page.'  }
           format.json { render json: { :message => 'You do not have permission to view this page.' },
                                status: :unprocessable_entity }
         end
         return
       elsif !current_user.authenticate(params[:user][:old_password]) and !user_params[:password].blank?
         respond_to do |format|
-          flash.now[:message] = 'The old password you provided is incorrect.'
-          format.html { render 'edit' , flash }
+          flash.now[:alert] = 'The old password you provided is incorrect.'
+          format.html { render 'edit' }
           format.json { render json: { :message => 'The old password you provided is incorrect.' },
                                status: :unprocessable_entity }
         end
@@ -76,12 +73,12 @@ class UsersController < ApplicationController
 
     respond_to do |format|
       if @user.update(user_params) and promoter_save and admin_save
-        flash.now[:message] = 'Successfully edited.'
-        format.html { render 'edit' , flash }
+        flash.now[:notice] = 'Successfully edited.'
+        format.html { render 'edit' }
         format.json { render json: { :message => 'Successfully edited.' } }
       else
-        flash.now[:message] = 'There was an error while saving the edits.'
-        format.html { render 'edit' , flash }
+        flash.now[:alert] = 'There was an error while saving the edits.'
+        format.html { render 'edit' }
         format.json { render json: { :errors => @user.errors, :messages => @user.errors.full_messages},
                              status: :unprocessable_entity }
       end
@@ -95,15 +92,50 @@ class UsersController < ApplicationController
     respond_to do |format|
       if @user.save then
         login(@user) #Automatically log in the user
-        flash.now[:message] = 'User successfully created.'
-        format.html { redirect_to root_path, flash }
+        format.html { redirect_to root_path, notice: 'User successfully created.' }
         format.json { render json: { :message => 'User successfully created', :redirect => root_path } }
       else
-        flash.now[:message] = 'There was an error signing up.'
-        format.html { render 'new' , flash }
+        flash.now[:alert] = 'There was an error signing up.'
+        format.html { render 'new' }
         format.json { render json: { :errors => @user.errors, :messages => @user.errors.full_messages},
                              status: :unprocessable_entity }
       end
+    end
+  end
+  
+  # DELETE /users/:id
+  def destroy
+    if current_user.is_administrator?
+      # Administrators cannot delete their own accounts
+      if @user.id == current_user.id
+        # insert message
+        return
+      end
+    else
+      # Normal users can only delete their own account, and must provide their password as confirmation
+      if @user.id == current_user.id
+        if current_user.authenticate(params[:password])
+          logout(current_user)
+        else
+          # insert message
+          return
+        end
+      else
+        # insert message
+        return
+      end
+    end
+    
+    @user.destroy
+    respond_to do |format|
+        # Use proper route
+        path = root_path
+        if logged_in? and current_user.is_administrator?
+          path = users_path
+        end
+        
+        format.html { redirect_to path, notice: 'User was successfully deleted.' }
+        format.json { render json: { :message => 'User was successfully deleted.', :redirect => path  } }
     end
   end
 

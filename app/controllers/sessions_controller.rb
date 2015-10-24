@@ -21,10 +21,10 @@ class SessionsController < ApplicationController
         format.json { render :json => { :redirect => root_path, :message => 'Logged in successfully.' } }
       end
     else
-      flash.now[:error] = 'Username and/or password is incorrect.'
+      flash.now[:alert] = 'Username and/or password is incorrect.'
       respond_to do |format|
-        format.html { render 'new' , flash }
-        format.json { render json: { :message => flash.now[:error] }, status: :unprocessable_entity }
+        format.html { render 'new' }
+        format.json { render json: { :message => flash.now[:alert] }, status: :unprocessable_entity }
       end
     end
   end

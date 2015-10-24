@@ -8,8 +8,7 @@ class ApplicationController < ActionController::Base
 
   def require_login
     unless logged_in?
-      flash.now[:error] = 'You must be logged in to access this page.'
-      redirect_to login_path
+      redirect_to login_path, alert: 'You must be logged in to access this page.'
     end
   end
 
@@ -21,24 +20,20 @@ class ApplicationController < ActionController::Base
 
   def require_promoter
     unless logged_in?
-      flash.now[:error] = 'You must be logged in to access this page.'
-      redirect_to login_path
+      redirect_to login_path, alert: 'You must be logged in to access this page.'
     else
       unless current_user.is_promoter? or current_user.is_administrator?
-        flash.now[:error] = 'You cannot access this page.'
-        redirect_to root_path
+        redirect_to root_path, alert: 'You cannot access this page.'
       end
     end
   end
 
   def require_admin
     unless logged_in?
-      flash.now[:error] = 'You must be logged in to access this page.'
-      redirect_to login_path
+      redirect_to login_path, alert: 'You must be logged in to access this page.'
     else
       unless current_user.is_administrator?
-        flash.now[:error] = 'You cannot access this page.'
-        redirect_to root_path
+        redirect_to root_path, alert: 'You cannot access this page.'
       end
     end
   end
