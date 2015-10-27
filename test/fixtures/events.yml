@@ -1,0 +1,39 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+# one:
+#   Title: MyString
+#   Description: MyString
+#   Latitude: 1
+#   Longitude: 1
+#   Category: MyString
+#   Day: 1
+#   Month: 1
+#   Year: 1
+
+# two:
+#   Title: MyString
+#   Description: MyString
+#   Latitude: 1
+#   Longitude: 1
+#   Category: MyString
+#   Day: 1
+#   Month: 1
+#   Year: 1
+
+newevent:
+  Title: "New Event"
+  Latitude: 15.123456
+  Longitude: 90.123456
+  Description: "A new event."
+  Category: "Party"
+  StartDay: 15
+  StartMonth: 6
+  StartYear: 2016
+  EndDay: 15
+  EndMonth: 6
+  EndYear: 2016
+  StartHour: 12
+  StartMinute: 30
+  EndHour: 12
+  EndMinute: 30
+  

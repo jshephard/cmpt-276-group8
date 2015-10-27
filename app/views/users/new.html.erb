@@ -1,0 +1,27 @@
+<h1>User Registration</h1>
+
+<%= link_to 'Back to Map', root_path %>
+
+<script>
+    $(document).ready(function() {
+        $('#user_form').on('ajax:success', function (event, data, status, xhr) {
+            if (!$("#error_explanation").length) {
+                $("#user_form").prepend("<div id='error_explanation' />");
+            }
+
+            $('#error_explanation').html('<b>' + data.message + '</b>');
+            // Delay the redirect to inform user of successful registration.
+            reset_textbox_background('user_');
+            
+            setTimeout(function() { window.location.replace(data.redirect) }, 1000);
+        });
+        $('#user_form').on('ajax:error', function (event, data, status, xhr) {
+            if (!$("#error_explanation").length) {
+                $("#user_form").prepend("<div id='error_explanation' />");
+            }
+
+            $('#error_explanation').html(render_errors('user_', data.responseJSON));
+        });
+    });
+</script>
+<%= render 'form', :button_name => 'Sign Up' %>
