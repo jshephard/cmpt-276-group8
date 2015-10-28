@@ -10,7 +10,6 @@
         background: #fff;
         padding: 10px;
         margin: 10px;
-        border: 3px solid #000;
       }
       #legend h3 {
         margin-top: 0;
@@ -19,13 +18,12 @@
         vertical-align: middle;
       }
         
-        #links {
+      #links {
         font-family: Arial, sans-serif;
         font-size: 15px;
         background: #fff;
         padding: 10px;
         margin: 10px;
-        border: 3px solid #000;
       }
       #links h3 {
         margin-top: 0;
@@ -33,10 +31,6 @@
       #links img {
         vertical-align: middle;
       }
-        
-        
-        
-        
     </style>
     <script type="text/javascript">
       var map;
@@ -104,8 +98,6 @@
           div.innerHTML = '<img src="' + icon + '"> ' + name;
           legend.appendChild(div);
         }
-          
-                
         map.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push(legend);  
           
           var linkIcons = {
@@ -146,7 +138,6 @@
           links.appendChild(div);
         }
           
-                
         map.controls[google.maps.ControlPosition.LEFT_TOP].push(links);
       }
     </script>

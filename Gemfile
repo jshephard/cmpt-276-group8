@@ -29,7 +29,7 @@ gem 'bcrypt', '~> 3.1.7'
 
 # Used for pagination of various models
 gem 'kaminari'
-
+gem 'bootstrap-sass', '3.3.5.0'
 # Use Unicorn as the app server
 # gem 'unicorn'
 
