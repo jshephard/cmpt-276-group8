@@ -31,43 +31,23 @@
 </p>
 
 <p>
-  <strong>Start Day:</strong>
-  <%= @event.StartDay %>
+  <strong>Starting Date:</strong>
+  <%= @event.StartDate %>
 </p>
 
 <p>
-  <strong>Start Month:</strong>
-  <%= @event.StartMonth %>
+  <strong>Starting Time:</strong>
+  <%= @event.StartTime %>
 </p>
 
 <p>
-  <strong>Start Year:</strong>
-  <%= @event.StartYear %>
+  <strong>Ending Date:</strong>
+  <%= @event.EndDate %>
 </p>
 
 <p>
-  <strong>End Day:</strong>
-  <%= @event.EndDay %>
-</p>
-
-<p>
-  <strong>End Month:</strong>
-  <%= @event.EndMonth %>
-</p>
-
-<p>
-  <strong>End Year:</strong>
-  <%= @event.EndYear %>
-</p>
-
-<p>
-  <strong>Start Time:</strong>
-  <%= @event.StartHour %>:<%= @event.StartMinute %>
-</p>
-
-<p>
-  <strong>End Time:</strong>
-  <%= @event.EndHour %>:<%= @event.EndMinute %>
+  <strong>Ending Time:</strong>
+  <%= @event.EndTime %>
 </p>
 
 <%= link_to 'Edit', edit_event_path(@event) %> |

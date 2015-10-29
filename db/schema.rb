@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151019205523) do
+ActiveRecord::Schema.define(version: 20151029173723) do
 
   create_table "administrators", force: :cascade do |t|
     t.integer  "user_id"
@@ -25,20 +25,14 @@ ActiveRecord::Schema.define(version: 20151019205523) do
     t.decimal  "Latitude",    precision: 6
     t.decimal  "Longitude",   precision: 6
     t.string   "Category"
-    t.integer  "StartDay"
-    t.integer  "StartMonth"
-    t.integer  "StartYear"
     t.datetime "created_at",                null: false
     t.datetime "updated_at",                null: false
     t.string   "Address"
-    t.integer  "StartMinute"
-    t.integer  "StartHour"
-    t.integer  "EndMinute"
-    t.integer  "EndHour"
-    t.integer  "EndDay"
-    t.integer  "EndMonth"
-    t.integer  "EndYear"
     t.integer  "user_id"
+    t.time     "StartTime"
+    t.time     "EndTime"
+    t.date     "StartDate"
+    t.date     "EndDate"
   end
 
   add_index "events", ["user_id"], name: "index_events_on_user_id"

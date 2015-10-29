@@ -1,6 +1,6 @@
-<%= link_to 'Back to Map', root_path %>
-
-<h1>Login</h1>
+<div class="col-lg-4" style="padding: 15px">
+<div class="well bs-component">
+<legend>Login</legend>
 <% flash.each do |message_type, message| %>
     <div class="alert alert-<%= message_type %>"><%= message %></div>
 <% end %>
@@ -25,19 +25,21 @@
 <div id="messages"></div>
 <%= form_for :session, url: login_path, html: {id: 'login_form', :'data-type' => 'json'}, remote: true do |f| %>
     <div class="field">
-      <%= f.label :username %><br>
-      <%= f.text_field :username %>
+      <span style="color: white">Username</span><br>
+      <%= f.text_field :username, class:"form-control", placeholder:"Username" %>
     </div>
     <div class="field">
-      <%= f.label :password %><br>
-      <%= f.password_field :password %>
+      <span style="color: white">Password</span><br>
+      <%= f.password_field :password, class:"form-control",id:"inputPassword", placeholder:"Password" %>
     </div>
     <div class="field">
-      <%= f.label :remember_me %><br>
+      <span style="color: white">Remember Me</span><br>
       <%= f.check_box :remember_me %>
     </div>
     <div class="actions">
-      <%= f.submit 'Login' %>
+      <%= f.submit 'Login', class:"btn btn-success", style:"color:white" %>
     </div>
 <% end %>
-<%= link_to 'Not a user? Sign up here.', register_path %>
+<%= link_to 'Not a user? Sign up here.', register_path, class:"btn btn-warning", style:"color:white" %>
+</div>
+</div>
