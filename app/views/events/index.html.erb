@@ -1,18 +1,4 @@
-<style>
 
-  table {
-    border-collapse: collapse;
-  }
-
-  table, th, td {
-    border: 1px solid black;
-  }
-  
-  th, td {
-    padding: 10px;
-  }
-  
-</style>
 <script>
     var page = 0;
 
@@ -57,9 +43,9 @@
 </script>
 <p id="notice"><%= notice %></p>
 
-<h1>Listing Events</h1>
+<h1 style="padding:0px 0px 0px 15px">Listing Events</h1>
 
-<table>
+<table class="table table-striped table-hover ">
   <thead>
     <tr>
       <th>Title</th>
@@ -78,8 +64,8 @@
 
   <tbody id="events-table-body" />
 </table>
-<a id="prev-page">Previous Page</a> | <a id="next-page">Next Page</a>
+<a id="prev-page" class="btn btn-primary">Previous Page</a>  <a id="next-page" class="btn btn-primary">Next Page</a>
 
-<br>
+<br><br>
 
-<%= link_to 'New Event', new_event_path %>
+<%= link_to 'New Event', new_event_path, class:"btn btn-primary"%>

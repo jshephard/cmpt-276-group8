@@ -1,6 +1,6 @@
-<div class="col-lg-4" style="padding: 15px">
+<h1 style="padding:0px 0px 0px 15px">Login</h1>
+<div class="col-lg-4">
 <div class="well bs-component">
-<legend>Login</legend>
 <% flash.each do |message_type, message| %>
     <div class="alert alert-<%= message_type %>"><%= message %></div>
 <% end %>
@@ -36,10 +36,10 @@
       <span style="color: white">Remember Me</span><br>
       <%= f.check_box :remember_me %>
     </div>
-    <div class="actions">
+    <div class="actions" style="padding: 0px 0px 4px 0px">
       <%= f.submit 'Login', class:"btn btn-success", style:"color:white" %>
     </div>
 <% end %>
-<%= link_to 'Not a user? Sign up here.', register_path, class:"btn btn-warning", style:"color:white" %>
+<%= link_to 'Not a user? Sign up here.', register_path, class:"btn btn-primary", style:"color:white" %>
 </div>
 </div>
