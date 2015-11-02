@@ -12,6 +12,7 @@
 //
 //= require jquery
 //= require jquery_ujs
+//= require bootstrap
 //= require turbolinks
 //= require_tree .
 
@@ -23,16 +24,15 @@ function reset_textbox_background(form_label) {
 function render_errors(form_label, error) {
     reset_textbox_background(form_label);
 
-    var html = '<h3>' + Object.keys(error.messages).length + ' errors occurred:</h3>';
+    var html = '<div class="alert alert-dismissible alert-danger"><button type="button" class="close" data-dismiss="alert">×</button><h4>' + Object.keys(error.messages).length + ' error(s) occured:</h4>';
     html += '<ul>';
     $.each(error.messages, function(key, value) {
         html += '<li>' + value + '</li>';
     });
-
     $.each(error.errors, function(key, value) {
-        $('#' + form_label + key).css("background-color", "red");
+        $('#' + form_label + key).css("background-color", "#d9534f");
     });
 
-    html += '</ul>';
+    html += '</ul></div>';
     return html;
 }

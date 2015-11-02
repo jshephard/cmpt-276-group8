@@ -1,7 +1,11 @@
+
+<div class="col-lg-4">
+<div class="well bs-component">
+
 <%= form_for @user, html: {id: 'user_form', :'data-type' => 'json'}, remote: true do |f| %>
     <% if @user.errors.any? %>
     <div id="error_explanation">
-      <h2><%= pluralize(@user.errors.count, "error") %> prohibited this user from registering:</h2>
+      <h4><%= pluralize(@user.errors.count, "error") %> prohibited this user from registering:</h4>
 
       <ul>
         <% @user.errors.full_messages.each do |message| %>
@@ -12,61 +16,66 @@
     <% end %>
 
     <div class="field">
-      <%= f.label :username %><br>
-      <%= f.text_field :username %>
+      <span style="color: white">Username</span><br>
+      <%= f.text_field :username, class:"form-control", placeholder:"Username" %>
     </div>
     <% if logged_in? # so it's explicit in the user editor it's a new password %>
         <div class="field">
-          <%= f.label 'New Password' %><br>
-          <%= f.password_field :password %>
+          <span style="color: white">New Password</span><br>
+          <%= f.password_field :password, class:"form-control", id:"inputPassword", placeholder:"Password" %>
         </div>
         <div class="field">
-          <%= f.label 'Confirm New Password' %><br>
-          <%= f.password_field :password_confirmation %>
+          <span style="color: white">Confirm New Password</span><br>
+          <%= f.password_field :password_confirmation, class:"form-control", id:"inputPassword", placeholder:"Confirm Password" %>
         </div>
         <% if current_user.is_administrator? %>
-            <%= f.label 'User groups' %><br>
+            <span style="color: white">User Groups</span><br>
             <div class="field">
               <%= f.check_box :is_promoter? %>
-              <%= f.label 'Is A Promoter' %>
+              <span style="color: white">Is a Promoter</span>
             </div>
             <div class="field">
               <%= f.check_box :is_administrator?, :disabled => (current_user.id == @user.id) %>
-              <%= f.label 'Is An Admin' %>
+              <span style="color: white">Is an Admin</span>
             </div>
         <% else %>
         <div class="field">
-          <%= f.label 'Old Password' %><br>
-          <%= f.password_field :old_password %>
+          <span style="color: white">Old Password</span><br>
+          <%= f.password_field :old_password, class:"form-control", id:"inputPassword", placeholder:"Old Password" %>
         </div>
         <% end %>
     <% else %>
         <div class="field">
-          <%= f.label :password %><br>
-          <%= f.password_field :password %>
+          <span style="color: white">Password</span><br>
+          <%= f.password_field :password, class:"form-control", id:"inputPassword", placeholder:"Password" %>
         </div>
         <div class="field">
-          <%= f.label :password_confirmation %><br>
-          <%= f.password_field :password_confirmation %>
+          <span style="color: white">Confirm Password</span><br>
+          <%= f.password_field :password_confirmation, class:"form-control", id:"inputPassword", placeholder:"Confirm Password" %>
         </div>
     <% end %>
     <div class="field">
-      <%= f.label :email %><br>
-      <%= f.email_field :email %>
+      <span style="color: white">Email</span><br>
+      <%= f.email_field :email, class:"form-control", placeholder:"Email"  %>
     </div>
     <div class="field">
-      <%= f.label :first_name %><br>
-      <%= f.text_field :first_name %>
+       <span style="color: white">First Name</span><br>
+      <%= f.text_field :first_name, class:"form-control", placeholder:"First Name"  %>
     </div>
     <div class="field">
-      <%= f.label :last_name %><br>
-      <%= f.text_field :last_name %>
+       <span style="color: white">Last Name</span><br>
+      <%= f.text_field :last_name, class:"form-control", placeholder:"Last Name"  %>
     </div>
-    <div class="field">
-      <%= f.label :date_of_birth %><br>
-      <%= f.date_select :date_of_birth, :start_year => Date.current.year, :end_year => 1900 %>
+    <div class="form-inline">
+      <div class="field">
+         <span style="color: white">Date of Birth</span><br>
+        <%= f.date_select :date_of_birth, {:order => [:day, :month, :year], :start_year => Date.current.year, :end_year => 1900},{ :class => 'form-control', :id => 'select'} %>
+      </div>
     </div>
     <div class="actions">
-      <%= f.submit value: button_name %>
+      <br>
+      <%= f.submit value: button_name, class:"btn btn-success", style:"color:white" %>
     </div>
 <% end %>
+</div>
+</div>

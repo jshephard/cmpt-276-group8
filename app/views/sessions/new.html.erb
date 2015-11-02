@@ -1,18 +1,18 @@
-<%= link_to 'Back to Map', root_path %>
-
-<h1>Login</h1>
+<h1 style="padding:0px 0px 0px 15px">Login</h1>
+<div class="col-lg-4">
+<div class="well bs-component">
 <% flash.each do |message_type, message| %>
     <div class="alert alert-<%= message_type %>"><%= message %></div>
 <% end %>
 <script>
     $(document).ready(function() {
         $('#login_form').on('ajax:success', function (event, data, status, xhr) {
-            $('#messages').html('<b>' + data.message + '</b>');
+            $('#messages').html('<div class="alert alert-dismissible alert-success"><button type="button" class="close" data-dismiss="alert">×</button><b>' + data.message + '</b></div>');
             // Delay the redirect to inform user of successful login.
             setTimeout(function() { window.location.replace(data.redirect) }, 1000);
         });
         $('#login_form').on('ajax:error', function (event, data, status, xhr) {
-            $('#messages').html('<b>' + data.responseJSON.message + '</b>');
+            $('#messages').html('<div class="alert alert-dismissible alert-danger"><button type="button" class="close" data-dismiss="alert">×</button><b>' + data.responseJSON.message + '</b></div>');
 
             <% #Change focus and select the text of either username or password %>
             if (!$('#session_username').val() || !$('#session_password').val())
@@ -25,19 +25,21 @@
 <div id="messages"></div>
 <%= form_for :session, url: login_path, html: {id: 'login_form', :'data-type' => 'json'}, remote: true do |f| %>
     <div class="field">
-      <%= f.label :username %><br>
-      <%= f.text_field :username %>
+      <span style="color: white">Username</span><br>
+      <%= f.text_field :username, class:"form-control", placeholder:"Username" %>
     </div>
     <div class="field">
-      <%= f.label :password %><br>
-      <%= f.password_field :password %>
+      <span style="color: white">Password</span><br>
+      <%= f.password_field :password, class:"form-control",id:"inputPassword", placeholder:"Password" %>
     </div>
     <div class="field">
-      <%= f.label :remember_me %><br>
+      <span style="color: white">Remember Me</span><br>
       <%= f.check_box :remember_me %>
     </div>
-    <div class="actions">
-      <%= f.submit 'Login' %>
+    <div class="actions" style="padding: 0px 0px 4px 0px">
+      <%= f.submit 'Login', class:"btn btn-success", style:"color:white" %>
     </div>
 <% end %>
-<%= link_to 'Not a user? Sign up here.', register_path %>
+<%= link_to 'Not a user? Sign up here.', register_path, class:"btn btn-primary", style:"color:white" %>
+</div>
+</div>

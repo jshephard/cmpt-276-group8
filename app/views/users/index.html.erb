@@ -1,4 +1,4 @@
-<h1>Users Index</h1>
+<h1 style="padding:0px 0px 0px 15px">Users Index</h1>
 <script>
   var page = 0;
 
@@ -36,8 +36,8 @@
       get_page(true);
   });
 </script>
-<%= link_to 'Back to Map', root_path %>
-<table>
+
+<table class="table table-striped table-hover ">
   <thead>
       <tr>
         <th>Username</th>
@@ -51,4 +51,4 @@
   </thead>
   <tbody id="users-table-body" />
 </table>
-<a id="prev-page">Previous Page</a> | <a id="next-page">Next Page</a>
+<a id="prev-page" class="btn btn-primary">Previous Page</a>   <a id="next-page" class="btn btn-primary">Next Page</a>

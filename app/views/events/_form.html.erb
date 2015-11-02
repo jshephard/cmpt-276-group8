@@ -1,43 +1,10 @@
-<style>
-  #map {
-    float:left;
-    padding:5px;
-    width:49%;
-    margin:0px;
-  }
-  #form {
-    float:left;
-    padding:5px;
-    width:49%;
-    margin:0px;
-  }
-  #content {
-    width:100%;
-    padding:10px;
-  }
-  #latlong {
-    width:100%;
-  }
-  #month {
-    width:100%;
-  }
-  #time {
-    width:100%;
-  }
-</style>
-
-
-<div id="content">
-  <div id="map">
-    <p><strong>Google Maps goes here</strong></p>
-  </div>
-  
-  <div id="form">
+<div class="col-lg-4" >
+<div class="well bs-component">
     <%= form_for(@event) do |f| %>
       <% if @event.errors.any? %>
-        <div id="error_explanation">
-          <h2><%= pluralize(@event.errors.count, "error") %> prohibited this event from being saved:</h2>
-    
+        <div class="alert alert-dismissible alert-danger">
+          <button type="button" class="close" data-dismiss="alert">×</button>
+          <h4><%= pluralize(@event.errors.count, "error") %> prohibited this event from being saved:</h4>
           <ul>
           <% @event.errors.full_messages.each do |message| %>
             <li><%= message %></li>
@@ -47,82 +14,68 @@
       <% end %>
     
       <div class="field">
-        <%= f.label :Title %><br>
-        <%= f.text_field :Title, :size => 50 %>
+        <span style="color: white">Title</span><br>
+        <%= f.text_field :Title, class:"form-control", placeholder:"Title"  %>
       </div>
       <div class="field">
-        <%= f.label :Description %><br>
-        <%= f.text_field :Description, :size => 50 %>
+        <span style="color: white">Description</span><br>
+        <%= f.text_area :Description, class:"form-control", rows:"3", placeholder:"Description" %>
       </div>
       <div class="field">
-        <%= f.label :Address %><br>
-        <%= f.text_field :Address, :size => 50 %>
+        <span style="color: white">Address/Location</span><br>
+        <%= f.text_field :Address, class:"form-control", placeholder:"Address" %>
       </div>
     
       
       <div class="field">
-        <%= f.label :Category %><br>
-        <%= f.select :Category, ['Concert','Emergency','Festival','Party'] %>
+        <span style="color: white">Category of Event</span><br>
+        <%= f.select( :Category, ['Concert','Emergency','Festival','Party'],{},  { :class => 'form-control', :id => 'select' }) %>
       </div>
       
-      <div id="latlong">
-        <center>
-        <div class="field" style="float:left; width:50%">
-          <%= f.label :Latitude %><br>
-          <%= f.number_field :Latitude, max:90, min:-90 %>
+      <div>
+        <div class="field" style="float: left">
+          <span style="color: white">Latitude</span><br>
+          <%= f.number_field :Latitude, max:90, min:-90, class:"form-control" %>
         </div>
-        <div class="field" style="float:left; width:50%">
-          <%= f.label :Longitude %><br>
-          <%= f.number_field :Longitude, max:180, min:-180 %>
+        <div class="field" style="float: right">
+          <span style="color: white">Longitude</span><br>
+          <%= f.number_field :Longitude, max:180, min:-180, class:"form-control" %>
         </div>
-        </center>
       </div>
       
-      <div id="month">
-        <div class="field" style="float: left; width:33%">
-          <%= f.label :StartDay %><br>
-          <%= f.select :StartDay, ((1..31).map {|i| [i,i] } ) %>
-        </div>
-        <div class="field" style="float: left; width:33%">
-          <%= f.label :StartMonth %><br>
-          <%= f.select :StartMonth, (1..12).map {|i| [I18n.t("date.month_names")[i], i]} %>
-        </div>
-        <div class="field" style="float: left; width:33%">
-          <%= f.label :StartYear %><br>
-          <%= f.select :StartYear, ((2015..2100).map {|i| [i,i] } )%>
+      <div style="clear:both" class="form-inline">
+        <div class="field" style="float: left">
+          <span style="color: white">Starting Date</span><br>
+          <%= f.date_select :StartDate, {:order => [:day, :month, :year], :start_year => Date.current.year, :end_year => 2100},  { :class => 'form-control', :id => 'select'}  %>
         </div>
       </div>
 
-        <div id="month">
-          <div class="field" style="float: left; width:33%">
-            <%= f.label :EndDay %><br>
-            <%= f.select :EndDay, ((1..31).map {|i| [i,i] } ) %>
-          </div>
-          <div class="field" style="float: left; width:33%">
-            <%= f.label :EndMonth %><br>
-            <%= f.select :EndMonth, (1..12).map {|i| [I18n.t("date.month_names")[i], i]} %>
-          </div>
-          <div class="field" style="float: left; width:33%">
-            <%= f.label :EndYear %><br>
-            <%= f.select :EndYear, ((2015..2100).map {|i| [i,i] } )%>
-          </div>
-        </div>
-      
-      <div id="time">
-        <div class="field" style="float: left; width:50%">
-          Starting Time:<br>
-          <%= f.number_field :StartHour, max:23, min:0 %>:<%= f.number_field :StartMinute, max:59, min:0 %>
-        </div>
-        <div class="field" style="float: left; width:50%">
-          Ending Time:<br>
-          <%= f.number_field :EndHour, max:23, min:0 %>:<%= f.number_field :EndMinute, max:59, min:0 %>
+      <div style="clear: both" class="form-inline">
+        <div class="field" style="float: left">
+          <span style="color: white">Ending Date</span><br>
+          <%= f.date_select :EndDate, {:order => [:day, :month, :year], :start_year => Date.current.year, :end_year => 2100},{ :class => 'form-control', :id => 'select'} %>
         </div>
       </div>
       
-      <div class="actions">
-        <%= f.submit %>
+      <div style="clear: both">
+        <div class="field" style="float: left">
+          <span style="color: white">Starting Time</span><br>
+          <%= f.time_field :StartTime, class:"form-control" %>
+        </div>
+        <div class="field" style="float: right">
+          <span style="color: white">Ending Time</span><br>
+          <%= f.time_field :EndTime, class:"form-control" %><br>
+        </div>
+      </div>
+       
+      <div class="actions" style="clear: both">
+        <button type="reset" class="btn btn-warning">Clear</button>
+        <button type="submit" class="btn btn-success">Submit</button>
       </div>
       
     <% end %>
-  </div>
+</div>
+</div>
+<div style="float:left">
+<h1>Map here</h1>
 </div>
