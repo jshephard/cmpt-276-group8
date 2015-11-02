@@ -40,6 +40,7 @@
     </style>
     <script type="text/javascript">
       var map;
+      var markers = [];
       function initialize() {
         map = new google.maps.Map(document.getElementById('map'), {
           zoom: 11,
@@ -70,29 +71,14 @@
             icon: icons[feature.type].icon,
             map: map
           });
+          markers.push(marker);
         }
 
-        var features = [
-          {
-            position: new google.maps.LatLng(49.2354318,-122.9801557),
-            type: 'LocalEvent'
-          }, {
-            position: new google.maps.LatLng(49.279243, -122.918816),
-            type: 'Concert'
-          }, {
-            position: new google.maps.LatLng(49.280712,-123.0451924),
-            type: 'Concert'
-          }, {
-            position: new google.maps.LatLng(49.2608838,-123.1161155),
-            type: 'Emergency'
-          }, {
-            position: new google.maps.LatLng(49.2778358,-123.1110114),
-            type: 'Emergency'
+        function clearAndDeleteMarkers() {
+          for (var i = 0; i < markers.length; i++) {
+            markers[i].setMap(null);
           }
-        ];
-
-        for (var i = 0, feature; feature = features[i]; i++) {
-          addMarker(feature);
+          markers = [];
         }
 
         var legend = document.getElementById('legend');
@@ -148,6 +134,24 @@
           
                 
         map.controls[google.maps.ControlPosition.LEFT_TOP].push(links);
+
+        google.maps.event.addListener(map, 'idle', function() {
+          var bounds = map.getBounds();
+          var sw = bounds.getSouthWest();
+          var ne = bounds.getNorthEast();
+          
+          $.getJSON("<%= events_path %>.json?lat_ne=" + ne.lat() + "&lat_sw=" + sw.lat() + "&long_sw=" + sw.lng() + "&long_ne=" + ne.lng(), function(data) {
+            clearAndDeleteMarkers();
+            $.each(data, function (key, value) {
+              var feature = { position: new google.maps.LatLng(value['Latitude'], value['Longitude']),
+                type: 'LocalEvent' };
+
+              addMarker(feature);
+            });
+          }).fail(function() {
+              alert("Error occurred fetching events.");
+          });
+        });
       }
     </script>
     <script async defer
