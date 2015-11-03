@@ -8,6 +8,7 @@ class User < ActiveRecord::Base
   has_one :promoter, dependent: :destroy
   has_one :administrator, dependent: :destroy
   has_many :events
+  has_many :reports, dependent: :destroy
 
   has_secure_password
   before_save { email.downcase! }

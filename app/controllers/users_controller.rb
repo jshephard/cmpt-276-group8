@@ -1,5 +1,5 @@
 class UsersController < ApplicationController
-  before_filter :require_logged_out, only: [:new, :create]
+  before_filter :require_logged_out, only: [:new, :create, :forgot_password, :request_password]
   before_filter :require_login, only: [:edit, :update, :destroy]
   before_filter :require_admin, only: [:index]
   before_action :set_user, only: [:edit, :update, :destroy]

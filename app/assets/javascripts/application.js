@@ -17,8 +17,12 @@
 //= require_tree .
 
 function reset_textbox_background(form_label) {
-    $('#' + form_label + 'form').find('input:text').css("background-color", "");
-    $('#' + form_label + 'form').find('input:password').css("background-color", "");
+    $('#' + form_label + 'form').find('input').css("background-color", "");
+}
+
+function create_alert_box (type, message) {
+    return '<div class="alert alert-dismissible alert-' + type +
+        '"><button type="button" class="close" data-dismiss="alert">×</button><b>' + message + '</b></div>';
 }
 
 function render_errors(form_label, error) {

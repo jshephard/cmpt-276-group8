@@ -1,7 +1,6 @@
-
-
 class Event < ActiveRecord::Base
     belongs_to :user
+    has_many :reports, dependent: :destroy
     
     validates :Title, length: { in: 3..80 }
     validates :Description, length: { maximum:200 }
