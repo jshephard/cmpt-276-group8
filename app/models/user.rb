@@ -69,6 +69,10 @@ class User < ActiveRecord::Base
     update_attribute(:email_validation_token, email_validation_token)
   end
 
+  def is_validated?
+    (email_validation_token == '' || email_validation_token == nil)
+  end
+
   def set_password_validation
     self.password_validation_token = SecureRandom.urlsafe_base64
     self.password_validation_timeout = 3.days.from_now

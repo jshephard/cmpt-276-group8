@@ -38,6 +38,10 @@
               <%= f.check_box :is_administrator?, :disabled => (current_user.id == @user.id) %>
               <span style="color: white">Is an Admin</span>
             </div>
+            <div class="field">
+              <%= f.check_box :is_validated? %>
+              <span style="color: white">Is Validated</span>
+            </div>
         <% else %>
         <div class="field">
           <span style="color: white">Old Password</span><br>

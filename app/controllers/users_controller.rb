@@ -33,26 +33,9 @@ class UsersController < ApplicationController
     promoter_save = true
     admin_save = true
 
-    unless current_user.is_administrator?
-      if @user.id != current_user.id
-        respond_to do |format|
-          format.html { redirect_to root_path, alert: 'You do not have permission to view this page.'  }
-          format.json { render json: { :message => 'You do not have permission to view this page.' },
-                               status: :unprocessable_entity }
-        end
-        return
-      elsif !current_user.authenticate(params[:user][:old_password]) and !user_params[:password].blank?
-        respond_to do |format|
-          flash.now[:alert] = 'The old password you provided is incorrect.'
-          format.html { render 'edit' }
-          format.json { render json: { :message => 'The old password you provided is incorrect.' },
-                               status: :unprocessable_entity }
-        end
-        return
-      end
-    else
+    if current_user.is_administrator?
       if params[:user][:is_promoter] == '1'
-        if !@user.is_promoter?
+        unless @user.is_promoter?
           promoter = Promoter.new(user_id: @user.id)
           promoter_save = promoter.save()
         end
@@ -68,6 +51,30 @@ class UsersController < ApplicationController
       elsif params[:user][:is_administrator] == '0' and @user.id != current_user.id
         # Administrators cannot remove themselves from power
         Administrator.where(user_id: @user.id).destroy_all
+      end
+
+      if params[:user][:is_validated] == '1'
+        @user.reset_email_validation
+      elsif params[:user][:is_validated] == '0'
+        @user.set_email_validation
+        UserMailer.validate_email(@user).deliver_now
+      end
+    else
+      if @user.id != current_user.id
+        respond_to do |format|
+          format.html { redirect_to root_path, alert: 'You do not have permission to view this page.'  }
+          format.json { render json: { :message => 'You do not have permission to view this page.' },
+                               status: :unprocessable_entity }
+        end
+        return
+      elsif !current_user.authenticate(params[:user][:old_password]) and !user_params[:password].blank?
+        respond_to do |format|
+          flash.now[:alert] = 'The old password you provided is incorrect.'
+          format.html { render 'edit' }
+          format.json { render json: { :message => 'The old password you provided is incorrect.' },
+                               status: :unprocessable_entity }
+        end
+        return
       end
     end
 
@@ -90,7 +97,7 @@ class UsersController < ApplicationController
     @user = User.new(user_params)
 
     respond_to do |format|
-      if @user.save then
+      if @user.save
         UserMailer.validate_email(@user).deliver_now
 
         login(@user) #Automatically log in the user
