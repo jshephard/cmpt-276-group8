@@ -11,7 +11,7 @@ gem 'uglifier', '>= 1.3.0'
 gem 'coffee-rails', '~> 4.1.0'
 gem 'coffee-script-source', '1.8.0', platforms: [:mswin]
 # See https://github.com/rails/execjs#readme for more supported runtimes
-# gem 'therubyracer', platforms: :ruby
+gem 'therubyracer'
 
 gem 'tzinfo-data', platforms: [:mingw, :mswin, :jruby]
 
@@ -29,7 +29,7 @@ gem 'bcrypt', '~> 3.1.7'
 
 # Used for pagination of various models
 gem 'kaminari'
-
+gem 'bootstrap-sass', '3.3.5.0'
 # Use Unicorn as the app server
 # gem 'unicorn'
 

@@ -7,6 +7,53 @@
   <%= csrf_meta_tags %>
 </head>
 <body>
+<nav class="navbar navbar-default navbar-fixed-top">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="#">EventsHub</a>
+    </div>
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+      <ul class="nav navbar-nav">
+        <li><%= link_to "Home", root_path %></li>
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Events<span class="caret"></span></a>
+          <ul class="dropdown-menu" role="menu">
+            <li><a href="/events">View Events</a></li>
+            <li><a href="/events/new">Create Event</a></li>
+          </ul>
+        </li>
+        <% if logged_in? %>
+        <li><a href="/profile">Profile</a></li>
+        <li><%= link_to "User",   '#' %></li>
+        <% end %>
+      </ul>
+      <form class="navbar-form navbar-right" role="Search">
+        <div class="form-group">
+          <input class="form-control" placeholder="Search" type="text">
+        </div>
+        <button type="submit" class="btn btn-default">Submit</button>
+      </form>
+      <ul class="nav navbar-nav navbar-right">
+        <% if !logged_in? %>
+          <li><a href="/register">Sign up</a></li>
+          <li><a href="/login">Login</a></li>
+        <% else %>
+          <% if current_user.is_administrator? %>
+            <li><a href="/users">Panel</a></li>
+          <% end %>
+          <li><a href="/logout">Logout</a></li>
+        <% end %>
+      </ul>
+    </div>
+  </div>
+</nav>
+
 
 <%= yield %>
 

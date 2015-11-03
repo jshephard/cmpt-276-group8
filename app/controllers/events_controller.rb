@@ -7,10 +7,21 @@ class EventsController < ApplicationController
   def index
     # We're gonna use json to load events in the background
     if request.format.json?
-      if params[:user_id]
-        @events = Event.where(user_id: params[:user_id]).page(@page)
+      # todo: cleanup
+      if params[:lat_ne] and params[:long_ne]
+        if params[:user_id]
+          @events = Event.where("user_id = ? AND (latitude <= ? AND latitude >= ?) AND (longitude <= ? AND longitude >= ?)", 
+            params[:user_id], params[:lat_ne], params[:lat_sw], params[:long_ne], params[:long_sw])
+        else
+          @events = Event.where("(latitude <= ? AND latitude >= ?) AND (longitude <= ? AND longitude >= ?)", 
+            params[:lat_ne], params[:lat_sw], params[:long_ne], params[:long_sw])
+        end
       else
-        @events = Event.page(@page)
+        if params[:user_id]
+          @events = Event.where(user_id: params[:user_id]).page(@page)
+        else
+          @events = Event.page(@page)
+        end
       end
     end
   end
@@ -87,6 +98,6 @@ class EventsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def event_params
-      params.require(:event).permit(:Title, :Description, :Address, :Latitude, :Longitude, :Category, :StartDay, :StartMonth, :StartYear, :EndDay, :EndMonth, :EndYear, :StartHour, :StartMinute, :EndHour, :EndMinute)
+      params.require(:event).permit(:Title, :Description, :Address, :Latitude, :Longitude, :Category, :StartDate, :StartTime, :EndDate, :EndTime)
     end
 end
