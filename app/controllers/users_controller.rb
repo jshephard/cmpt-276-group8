@@ -102,40 +102,52 @@ class UsersController < ApplicationController
       end
     end
   end
-  
+
   # DELETE /users/:id
   def destroy
+    message = ''
+    path = root_path
+    fail = false
     if current_user.is_administrator?
       # Administrators cannot delete their own accounts
       if @user.id == current_user.id
-        # insert message
-        return
+        message = 'Administrators cannot delete their own accounts.'
+        path = users_path
+        fail = true
       end
     else
       # Normal users can only delete their own account, and must provide their password as confirmation
       if @user.id == current_user.id
         if current_user.authenticate(params[:password])
-          logout(current_user)
+          logout
         else
-          # insert message
-          return
+          message = 'You provided an incorrect password.'
+          path = edit_user_url(current_user.id)
+          fail = true
         end
       else
-        # insert message
-        return
+        message = 'You do not have permission to view this page.'
+        fail = true
       end
     end
-    
-    @user.destroy
-    respond_to do |format|
-        # Use proper route
-        path = root_path
-        if logged_in? and current_user.is_administrator?
-          path = users_path
-        end
-        
-        format.html { redirect_to path, notice: 'User was successfully deleted.' }
-        format.json { render json: { :message => 'User was successfully deleted.', :redirect => path  } }
+
+    if fail
+      respond_to do |format|
+        format.html { redirect_to path, alert: message }
+        format.json { render json: { :message => message, :redirect => path  } }
+      end
+    else
+      @user.destroy
+
+      # Use proper route
+      if logged_in? and current_user.is_administrator?
+        path = users_path
+      end
+
+      respond_to do |format|
+          format.html { redirect_to path, notice: 'User was successfully deleted.' }
+          format.json { render json: { :message => 'User was successfully deleted.', :redirect => path  } }
+      end
     end
   end
 
