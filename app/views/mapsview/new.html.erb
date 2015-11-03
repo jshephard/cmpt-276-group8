@@ -107,8 +107,5 @@
       src="https://maps.googleapis.com/maps/api/js?callback=initialize">
     </script>
 
-    <% flash.each do |name, msg| -%>
-      <%= content_tag :div, msg, class: name %>
-    <% end -%>
     <div id="map"></div>
     <div id="legend"><h3>Legend</h3></div>

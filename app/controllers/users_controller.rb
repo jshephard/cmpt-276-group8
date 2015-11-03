@@ -125,15 +125,9 @@ class UsersController < ApplicationController
         fail = true
       end
     else
-      # Normal users can only delete their own account, and must provide their password as confirmation
+      # Normal users can delete their account
       if @user.id == current_user.id
-        if current_user.authenticate(params[:password])
-          logout
-        else
-          message = 'You provided an incorrect password.'
-          path = edit_user_url(current_user.id)
-          fail = true
-        end
+        logout
       else
         message = 'You do not have permission to view this page.'
         fail = true
