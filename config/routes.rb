@@ -1,17 +1,22 @@
 Rails.application.routes.draw do
-    resources :mapsview
-    root 'mapsview#new'
+  get 'admin' => 'admin#index'
+
+  root 'mapsview#new'
 
   resources :events
-    #root 'events#index'
 
   get 'login' => 'sessions#new'
   post 'login' => 'sessions#create'
   get 'logout' => 'sessions#destroy'
-    get "main" => 'mapsview#new'
 
   get 'register' => 'users#new'
   get 'profile' => 'users#edit'
+
+  scope 'login' do
+    get 'forget' => 'users#forgot_password'
+    post 'forget' => 'users#request_password'
+    get 'validate' => 'users#validate_email'
+  end
 
   resources :users do
       resources  :mapsview, :events, only: [:index]

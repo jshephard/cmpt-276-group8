@@ -82,47 +82,7 @@
           div.innerHTML = '<img src="' + icon + '"> ' + name;
           legend.appendChild(div);
         }
-        map.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push(legend);  
-          
-          var linkIcons = {
-          <% if !logged_in? %>
-            Login: {
-                name:'<a href="login">Login</a>'
-            },
-            Signup: {
-                name:'<a href="register">Sign up</a>'
-            },
-          <% else %>
-            Logout: {
-              name:'<a href="logout">Logout</a>'
-            },
-            Profile: {
-              name:'<a href="profile">Your Profile</a>'
-            },
-            <% if current_user.is_administrator? %>
-              Users: {
-                name:'<a href="users">User List</a>'
-              },
-            <% end %>
-          <% end %>
-          EventsLists: {
-              name:'<a href="events/new">Add Events</a>'
-          },
-          Notifications: {
-              name:'<a>Notifications - NA </a>'
-          }
-        };
-
-        var links = document.getElementById('links');
-        for (var key in linkIcons) {
-          var type = linkIcons[key];
-          var name = type.name;
-          var div = document.createElement('div');
-          div.innerHTML = name;
-          links.appendChild(div);
-        }
-          
-        map.controls[google.maps.ControlPosition.LEFT_TOP].push(links);
+        map.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push(legend);
 
         google.maps.event.addListener(map, 'idle', function() {
           var bounds = map.getBounds();
@@ -146,12 +106,9 @@
     <script async defer
       src="https://maps.googleapis.com/maps/api/js?callback=initialize">
     </script>
-    <body>
-            <% flash.each do |name, msg| -%>
-              <%= content_tag :div, msg, class: name %>
-            <% end -%>
-            <div id="map"></div>
-            <div id="legend"><h3>Legend</h3></div>
-            <div id="links"><h3>Remove This Please</h3></div>
 
-    </body>
+    <% flash.each do |name, msg| -%>
+      <%= content_tag :div, msg, class: name %>
+    <% end -%>
+    <div id="map"></div>
+    <div id="legend"><h3>Legend</h3></div>

@@ -58,4 +58,25 @@ class User < ActiveRecord::Base
     self.admin ||= Administrator.find_by(user_id: id)
     return !self.admin.nil?
   end
+
+  def set_email_validation
+    self.email_validation_token = SecureRandom.urlsafe_base64
+    update_attribute(:email_validation_token, email_validation_token)
+  end
+
+  def reset_email_validation
+    self.email_validation_token = ''
+    update_attribute(:email_validation_token, email_validation_token)
+  end
+
+  def set_password_validation
+    self.password_validation_token = SecureRandom.urlsafe_base64
+    self.password_validation_timeout = 3.days.from_now
+    update_attribute(:password_validation_token, password_validation_token)
+  end
+
+  def reset_password_validation
+    self.password_validation_token = ''
+    update_attribute(:password_validation_token, password_validation_token)
+  end
 end

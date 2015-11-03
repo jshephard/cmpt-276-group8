@@ -91,6 +91,8 @@ class UsersController < ApplicationController
 
     respond_to do |format|
       if @user.save then
+        UserMailer.validate_email(@user).deliver_now
+
         login(@user) #Automatically log in the user
         format.html { redirect_to root_path, notice: 'User successfully created.' }
         format.json { render json: { :message => 'User successfully created', :redirect => root_path } }
@@ -147,6 +149,62 @@ class UsersController < ApplicationController
       respond_to do |format|
           format.html { redirect_to path, notice: 'User was successfully deleted.' }
           format.json { render json: { :message => 'User was successfully deleted.', :redirect => path  } }
+      end
+    end
+  end
+
+  def forgot_password
+    if params[:token]
+      @user = User.find_by(password_validation_token: params[:token])
+
+      respond_to do |format|
+        if @user and @user.password_validation_timeout > DateTime.now and @user.password_validation_token != ''
+          password = SecureRandom.urlsafe_base64[0..10]
+          @user.password = password
+          if @user.save
+            UserMailer.new_password(@user, password).deliver_now
+            @user.reset_password_validation
+            format.html { redirect_to root_path, notice: 'Sent an email containing the new password for the account.' }
+            format.json { render json: { :message => 'Sent an email containing the new password for the account.' }  }
+          else
+            format.html { render 'forgot_password', notice: 'Error occurred while resetting password.' }
+            format.json { render json: { :message => 'Error occurred while resetting password.'},
+                                 status: :unprocessable_entity  }
+          end
+        else
+          format.html { render 'forgot_password', notice: 'Link out of date.' }
+          format.json { render json: { :message => 'Link out of date.'}, status: :unprocessable_entity  }
+        end
+      end
+    end
+  end
+
+  def request_password
+    @user = User.find_by(email: params[:email])
+
+    respond_to do |format|
+      if @user
+        UserMailer.validate_password(@user).deliver_now
+        format.html { render 'forgot_password', notice: 'Sent an email containing a link to reset your password.' }
+        format.json { render json: { :message => 'Sent an email containing a link to reset your password.' }  }
+      else
+        format.html { render 'forgot_password', notice: 'No account associated with this email.' }
+        format.json { render json: { :message => 'No account associated with this email.'}, status: :unprocessable_entity  }
+      end
+    end
+  end
+
+  def validate_email
+    @user = User.find_by(email_validation_token: params[:token])
+
+    respond_to do |format|
+      if @user
+        @user.reset_email_validation
+        format.html { redirect_to root_path, notice: 'Email was successfully validated.' }
+        format.json { render json: { :message => 'Email was successfully validated.', :redirect => root_path  } }
+      else
+        format.html { redirect_to root_path, notice: 'Validation link invalid.' }
+        format.json { render json: { :message => 'Validation link invalid.', :redirect => root_path  } }
       end
     end
   end

@@ -45,7 +45,7 @@
           <li><a href="/login">Login</a></li>
         <% else %>
           <% if current_user.is_administrator? %>
-            <li><a href="/users">Panel</a></li>
+            <li><a href="/admin">Panel</a></li>
           <% end %>
           <li><a href="/logout">Logout</a></li>
         <% end %>
