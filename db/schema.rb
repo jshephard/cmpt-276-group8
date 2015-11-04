@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151019205523) do
+ActiveRecord::Schema.define(version: 20151104002915) do
 
   create_table "administrators", force: :cascade do |t|
     t.integer  "user_id"
@@ -20,18 +20,17 @@ ActiveRecord::Schema.define(version: 20151019205523) do
   end
 
   create_table "events", force: :cascade do |t|
-
-    t.string   "Title",       limit: 255
-    t.text     "Description", limit: 255
-    t.decimal  "Latitude",                precision: 6
-    t.decimal  "Longitude",               precision: 6
-    t.string   "Category",    limit: 255
+    t.string   "Title"
+    t.text     "Description"
+    t.decimal  "Latitude",    precision: 6
+    t.decimal  "Longitude",   precision: 6
+    t.string   "Category"
     t.integer  "StartDay"
     t.integer  "StartMonth"
     t.integer  "StartYear"
-    t.datetime "created_at",                            null: false
-    t.datetime "updated_at",                            null: false
-    t.string   "Address",     limit: 255
+    t.datetime "created_at",                null: false
+    t.datetime "updated_at",                null: false
+    t.string   "Address"
     t.integer  "StartMinute"
     t.integer  "StartHour"
     t.integer  "EndMinute"
@@ -46,6 +45,14 @@ ActiveRecord::Schema.define(version: 20151019205523) do
 
   create_table "promoters", force: :cascade do |t|
     t.integer  "user_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "relationships", force: :cascade do |t|
+    t.integer  "user_id"
+    t.integer  "friend_id"
+    t.integer  "status"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
