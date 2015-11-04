@@ -1,5 +1,6 @@
 class UsersController < ApplicationController
   before_filter :require_logged_out, only: [:new, :create, :forgot_password, :request_password]
+  before_filter :require_logged_out, only: [:forgot_password, :request_password], unless: :require_admin
   before_filter :require_login, only: [:edit, :update, :destroy]
   before_filter :require_admin, only: [:index]
   before_action :set_user, only: [:edit, :update, :destroy]
@@ -205,7 +206,8 @@ class UsersController < ApplicationController
         format.json { render json: { :message => 'Email was successfully validated.', :redirect => root_path  } }
       else
         format.html { redirect_to root_path, notice: 'Validation link invalid.' }
-        format.json { render json: { :message => 'Validation link invalid.', :redirect => root_path  } }
+        format.json { render json: { :message => 'Validation link invalid.', :redirect => root_path  },
+                             status: :unprocessable_entity }
       end
     end
   end
@@ -222,5 +224,9 @@ class UsersController < ApplicationController
       if params[:id] # users can go to /profile as well
         @user = User.find_by(id: params[:id])
       end
+    end
+
+    def require_admin
+      current_user.is_administrator?
     end
 end

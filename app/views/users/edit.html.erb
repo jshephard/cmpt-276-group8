@@ -12,7 +12,15 @@
             else
                 $('#messages').html(create_alert_box('danger', data.responseJSON.message));
         });
-    });
+
+        $('#reset-password').click(function() {
+          $.post("<%= forget_url %>", "email=<%= @user.email %>", function(data, textStatus) {
+            $('#messages').html(create_alert_box('success', data.message));
+          }, "json").fail(function(jqXHR, textStatus, errorThrown) {
+            $('#messages').html(create_alert_box('danger', jqXHR.responseJSON.message));
+          });
+        });
+      });
 </script>
 <%= render 'form', :button_name => 'Save Edits' %>
 

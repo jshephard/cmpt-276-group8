@@ -79,6 +79,9 @@
     <div class="actions">
       <br>
       <%= f.submit value: button_name, class:"btn btn-success", style:"color:white" %>
+      <% if current_user.is_administrator? %>
+          <a id='reset-password' class="btn btn-primary color:white">Send Reset Password Link</a>
+      <% end %>
     </div>
 <% end %>
 </div>
