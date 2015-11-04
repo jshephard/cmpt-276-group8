@@ -17,8 +17,11 @@
             "<td><a href='" + value['event_url'] + "'>" + value['event'] + "</a></td>" +
             "<td>" + value['description'] + "</td>" +
             "<td><a href='" + value['user_url'] + "'>" + value['user'] + "</a></td>" +
-            "<td><a href='" + value['event_url'] + "' data-method='delete' rel='nofollow' data-confirm='Are you sure?'>Delete Event</a> | " +
-            "<a href='" + value['report_url'] + "' data-method='delete' rel='nofollow' data-confirm='Are you sure?'>Delete Report</a></td>" +
+            "<td>" +
+            "<a href='" + value['event_reports_url'] + "'>View All Reports for Event</a><br/>" +
+            "<a href='" + value['event_url'] + "' data-method='delete' rel='nofollow' data-confirm='Are you sure?'>Delete Event</a><br/>" +
+            "<a href='" + value['report_url'] + "' data-method='delete' rel='nofollow' data-confirm='Are you sure?'>Delete Report</a>" +
+            "</td>" +
             "</tr>");
       });
     }).fail(function() {

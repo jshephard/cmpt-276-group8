@@ -5,7 +5,7 @@
 
       $('#messages').html(create_alert_box('success', data.message));
 
-      setTimeout(function() { window.location.replace(data.redirect) }, 5000);
+      setTimeout(function() { window.location.replace(data.redirect) }, 2000);
     });
     $('#report_form').on('ajax:error', function (event, data, status, xhr) {
       $('#messages').html(render_errors('user_', data.responseJSON));

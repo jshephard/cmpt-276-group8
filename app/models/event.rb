@@ -1,3 +1,29 @@
+class TimeValidator < ActiveModel::Validator
+    def initialize(event)
+        @event = event
+    end
+
+    def validate
+        if @event.StartTime >= @event.EndTime && @event.StartDate == @event.EndDate
+            @event.errors[:base] << "Starting time is before or is the same as the ending time."
+        end
+
+    end
+end
+
+
+class DateValidator < ActiveModel::Validator
+    def initialize(event)
+        @event = event
+    end
+
+    def validate
+        if @event.StartDate > @event.EndDate
+            @event.errors[:base] << "Starting date is before ending date"
+        end
+    end
+end
+
 class Event < ActiveRecord::Base
     belongs_to :user
     has_many :reports, dependent: :destroy
@@ -11,5 +37,9 @@ class Event < ActiveRecord::Base
     validates :Title, :Description, :Address, presence: true
     validates :Latitude, :Longitude, presence: true
     validates :StartDate, :StartTime, :EndDate, :EndTime, presence: true
-    
+
+    validate do |event|
+      TimeValidator.new(event).validate
+      DateValidator.new(event).validate
+    end
 end

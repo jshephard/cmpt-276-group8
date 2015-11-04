@@ -1,11 +1,11 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 one:
-  users_id: 
-  events_id: 
-  description: MyText
+  user_id: 1
+  event_id: 1
+  description: Bad event!
 
 two:
-  users_id: 
-  events_id: 
-  description: MyText
+  user_id: 2
+  event_id: 2
+  description: Really awful stuff.

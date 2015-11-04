@@ -9,4 +9,5 @@ json.array!(@reports) do |report|
   json.event event.Title
   json.event_url event_url(event)
   json.report_url report_url(report)
+  json.event_reports_url event_reports_url(event)
 end

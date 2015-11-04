@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151104031454) do
+ActiveRecord::Schema.define(version: 20151104035919) do
 
   create_table "administrators", force: :cascade do |t|
     t.integer  "user_id"
@@ -22,11 +22,11 @@ ActiveRecord::Schema.define(version: 20151104031454) do
   create_table "events", force: :cascade do |t|
     t.string   "Title",       limit: 255
     t.text     "Description", limit: 255
-    t.decimal  "Latitude",                precision: 6
-    t.decimal  "Longitude",               precision: 6
+    t.decimal  "Latitude",                precision: 9, scale: 6
+    t.decimal  "Longitude",               precision: 9, scale: 6
     t.string   "Category",    limit: 255
-    t.datetime "created_at",                            null: false
-    t.datetime "updated_at",                            null: false
+    t.datetime "created_at",                                      null: false
+    t.datetime "updated_at",                                      null: false
     t.string   "Address",     limit: 255
     t.integer  "user_id"
     t.time     "StartTime"
@@ -67,7 +67,6 @@ ActiveRecord::Schema.define(version: 20151104031454) do
     t.string   "password_validation_token",   limit: 255
     t.string   "email_validation_token",      limit: 255
     t.datetime "password_validation_timeout"
-    t.datetime "email_validation_timeout"
   end
 
 end
