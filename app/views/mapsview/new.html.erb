@@ -34,12 +34,24 @@
       var map;
       var markers = [];
       function initialize() {
-        map = new google.maps.Map(document.getElementById('map'), {
-          zoom: 11,
-          center: new google.maps.LatLng(49.2780937,-122.922072),
-          mapTypeId: google.maps.MapTypeId.ROADMAP
-        });
+          if(navigator.geolocation) {
+              success = function(position) {
+                  createMap(position.coords.latitude, position.coords.longitude);
+              };
+              error = function() { createMap(49.2780937,-122.922072); }
 
+              navigator.geolocation.getCurrentPosition(success, error);
+          } else {
+            createMap(49.2780937,-122.922072);
+          }
+      }
+
+      function createMap(lat, lng) {
+          map = new google.maps.Map(document.getElementById('map'), {
+              zoom: 11,
+              center: new google.maps.LatLng(lat,lng),
+              mapTypeId: google.maps.MapTypeId.ROADMAP
+          });
         
         var iconBase = 'https://maps.google.com/mapfiles/kml/shapes/';
         var icons = {

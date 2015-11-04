@@ -26,14 +26,8 @@ newevent:
   Longitude: 90.123456
   Description: "A new event."
   Category: "Party"
-  StartDay: 15
-  StartMonth: 6
-  StartYear: 2016
-  EndDay: 15
-  EndMonth: 6
-  EndYear: 2016
-  StartHour: 12
-  StartMinute: 30
-  EndHour: 12
-  EndMinute: 30
+  StartDate: 2016-06-15
+  EndDate: 2016-06-15
+  StartTime: 12:30
+  EndTime: 12:30
   

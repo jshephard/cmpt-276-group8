@@ -1,2 +1,49 @@
-<h1>Reports#index</h1>
-<p>Find me in app/views/reports/index.html.erb</p>
+<script>
+  var page = 0;
+
+  function get_page(next)
+  {
+    if (next)
+      page++;
+    else if (page > 1)
+      page--;
+    else
+      return;
+
+    $("#reports-table-body").html("");
+    $.getJSON("<%= request.path %>.json?page=" + page, function(data) {
+      $.each(data, function (key, value) {
+        $("#reports-table-body").append("<tr>" +
+            "<td><a href='" + value['event_url'] + "'>" + value['event'] + "</a></td>" +
+            "<td>" + value['description'] + "</td>" +
+            "<td><a href='" + value['user_url'] + "'>" + value['user'] + "</a></td>" +
+            "<td><a href='" + value['event_url'] + "' data-method='delete' rel='nofollow' data-confirm='Are you sure?'>Delete Event</a> | " +
+            "<a href='" + value['report_url'] + "' data-method='delete' rel='nofollow' data-confirm='Are you sure?'>Delete Report</a></td>" +
+            "</tr>");
+      });
+    }).fail(function() {
+      alert("An error occurred fetching the user list.");
+    });
+  }
+
+  $(document).ready(function() {
+    $('#prev-page').click(function(){ get_page(false); return false; });
+    $('#next-page').click(function(){ get_page(true); return false; });
+    get_page(true);
+  });
+</script>
+<div class="col-lg-6">
+  <h1 style="padding:0px 0px 0px 15px">Reports</h1>
+  <table class="table table-striped table-hover">
+    <thead>
+    <tr>
+      <th>Event</th>
+      <th>Report</th>
+      <th>Reported By</th>
+      <th/>
+    </tr>
+    </thead>
+    <tbody id="reports-table-body" />
+  </table>
+  <a id="prev-page" class="btn btn-primary">Previous Page</a>   <a id="next-page" class="btn btn-primary">Next Page</a>
+</div>

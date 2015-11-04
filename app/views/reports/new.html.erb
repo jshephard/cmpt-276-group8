@@ -1,2 +1,21 @@
-<h1>Reports#new</h1>
-<p>Find me in app/views/reports/new.html.erb</p>
+<script>
+  $(document).ready(function() {
+    $('#report_form').on('ajax:success', function (event, data, status, xhr) {
+      reset_textbox_background('report_');
+
+      $('#messages').html(create_alert_box('success', data.message));
+
+      setTimeout(function() { window.location.replace(data.redirect) }, 5000);
+    });
+    $('#report_form').on('ajax:error', function (event, data, status, xhr) {
+      $('#messages').html(render_errors('user_', data.responseJSON));
+    });
+  });
+</script>
+
+<div class="col-lg-4">
+  <h1>New Report</h1>
+  <div class="well bs-component">
+    <%= render 'form', :button_name => 'Submit' %>
+  </div>
+</div>
