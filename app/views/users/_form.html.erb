@@ -3,17 +3,17 @@
 <div class="well bs-component">
 
 <%= form_for @user, html: {id: 'user_form', :'data-type' => 'json'}, remote: true do |f| %>
-    <% if @user.errors.any? %>
-    <div id="error_explanation">
-      <h4><%= pluralize(@user.errors.count, "error") %> prohibited this user from registering:</h4>
+    <div id="messages">
+      <% if @user.errors.any? %>
+        <h4><%= pluralize(@user.errors.count, "error") %> prohibited this user from registering:</h4>
 
-      <ul>
-        <% @user.errors.full_messages.each do |message| %>
-            <li><%= message %></li>
-        <% end %>
-      </ul>
+        <ul>
+          <% @user.errors.full_messages.each do |message| %>
+              <li><%= message %></li>
+          <% end %>
+        </ul>
+      <% end %>
     </div>
-    <% end %>
 
     <div class="field">
       <span style="color: white">Username</span><br>
@@ -22,11 +22,11 @@
     <% if logged_in? # so it's explicit in the user editor it's a new password %>
         <div class="field">
           <span style="color: white">New Password</span><br>
-          <%= f.password_field :password, class:"form-control", id:"inputPassword", placeholder:"Password" %>
+          <%= f.password_field :password, class:"form-control", placeholder:"Password" %>
         </div>
         <div class="field">
           <span style="color: white">Confirm New Password</span><br>
-          <%= f.password_field :password_confirmation, class:"form-control", id:"inputPassword", placeholder:"Confirm Password" %>
+          <%= f.password_field :password_confirmation, class:"form-control", placeholder:"Confirm Password" %>
         </div>
         <% if current_user.is_administrator? %>
             <span style="color: white">User Groups</span><br>
@@ -45,17 +45,17 @@
         <% else %>
         <div class="field">
           <span style="color: white">Old Password</span><br>
-          <%= f.password_field :old_password, class:"form-control", id:"inputPassword", placeholder:"Old Password" %>
+          <%= f.password_field :old_password, class:"form-control", placeholder:"Old Password" %>
         </div>
         <% end %>
     <% else %>
         <div class="field">
           <span style="color: white">Password</span><br>
-          <%= f.password_field :password, class:"form-control", id:"inputPassword", placeholder:"Password" %>
+          <%= f.password_field :password, class:"form-control", placeholder:"Password" %>
         </div>
         <div class="field">
           <span style="color: white">Confirm Password</span><br>
-          <%= f.password_field :password_confirmation, class:"form-control", id:"inputPassword", placeholder:"Confirm Password" %>
+          <%= f.password_field :password_confirmation, class:"form-control", placeholder:"Confirm Password" %>
         </div>
     <% end %>
     <div class="field">

@@ -1,9 +1,14 @@
 Rails.application.routes.draw do
+
+  resources :reports
+
   get 'admin' => 'admin#index'
 
   root 'mapsview#new'
 
-  resources :events
+  resources :events do
+    resources :reports
+  end
 
   get 'login' => 'sessions#new'
   post 'login' => 'sessions#create'

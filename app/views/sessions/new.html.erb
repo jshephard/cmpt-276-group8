@@ -30,7 +30,7 @@
     </div>
     <div class="field">
       <span style="color: white">Password</span><br>
-      <%= f.password_field :password, class:"form-control",id:"inputPassword", placeholder:"Password" %>
+      <%= f.password_field :password, class:"form-control", placeholder:"Password" %>
     </div>
     <div class="field">
       <span style="color: white">Remember Me</span><br>
@@ -41,5 +41,6 @@
     </div>
 <% end %>
 <%= link_to 'Not a user? Sign up here.', register_path, class:"btn btn-primary", style:"color:white" %>
+<%= link_to 'Forgot your password?', forget_path, class:"btn btn-primary", style:"color:white" %>
 </div>
 </div>
