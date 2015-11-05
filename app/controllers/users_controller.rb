@@ -227,6 +227,6 @@ class UsersController < ApplicationController
     end
 
     def require_admin
-      current_user.is_administrator?
+      logged_in? && current_user.is_administrator?
     end
 end
