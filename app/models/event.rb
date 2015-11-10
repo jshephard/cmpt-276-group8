@@ -4,6 +4,10 @@ class TimeValidator < ActiveModel::Validator
     end
 
     def validate
+        # Have to check for nil, because validation will always run
+        if @event.StartTime.nil? or @event.EndTime.nil? or @event.StartDate.nil? or @event.EndDate.nil?
+            return
+        end
         if @event.StartTime >= @event.EndTime && @event.StartDate == @event.EndDate
             @event.errors[:base] << "Starting time is before or is the same as the ending time."
         end
@@ -18,6 +22,10 @@ class DateValidator < ActiveModel::Validator
     end
 
     def validate
+        # Have to check for nil, because validation will always run
+        if @event.StartTime.nil? or @event.EndTime.nil? or @event.StartDate.nil? or @event.EndDate.nil?
+            return
+        end
         if @event.StartDate > @event.EndDate
             @event.errors[:base] << "Starting date is before ending date"
         end
