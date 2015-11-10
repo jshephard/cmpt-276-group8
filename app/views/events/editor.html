@@ -2,19 +2,13 @@
     <div id="form">
         <h1 style="padding:0px 0px 0px 15px">New Event</h1>
         <%= render 'form' %>
-
-            <style>
-                #map {
-                    width: 600px;
-                    height: 600px;
-                }
-            </style>
+handler = Gmaps.build('Google');
+handler.buildMap(
+  {
+    provider: {
+      disableDefaultUI: true
             <script src="https://maps.googleapis.com/maps/api/js"></script>
             <script>
-                var locationClicked = false;
-                var marker
-                var myLatlng
-
                 function initialize() {
                     var mapCanvas = document.getElementById('map');
                     var mapOptions = {
@@ -25,29 +19,39 @@
                     var map = new google.maps.Map(mapCanvas, mapOptions)
                     google.maps.event.addListener(map, 'click', function (event) {
                         addMarker(event.latLng, map);
-                        document.getElementById("latbox").value = event.latLng.lat();
-                        document.getElementById("lngbox").value = event.latLng.lng();
                     });
                 }
 
                 function addMarker(location, map) {
-
-                    if (locationClicked == true) {
-                        marker.setMap(null);
-                    }
-                    marker = new google.maps.Marker({
+                    // Add the marker at the clicked location, and add the next-available label
+                    // from the array of alphabetical characters.
+                    var marker = new google.maps.Marker({
                         position: location,
+                        label: labels[labelIndex++ % labels.length],
                         map: map
                     });
-                    locationClicked = true;
-
                 }
-
                 google.maps.event.addDomListener(window, 'load', initialize);
-            </script>
-            </head>
-
-            <body>
-                <div id="map"></div>
-            </body>
+            </script>    },
+    internal: {
+      id: 'map'
+    }
+  },
+  function() {
+    markers = handler.addMarkers([
+      {
+        "lat": 0,
+        "lng": 0,
+        "picture": {
+          "url": "https://addons.cdn.mozilla.net/img/uploads/addon_icons/13/13028-64.png",
+          "width":  36,
+          "height": 36
+        },
+        "infowindow": "hello!"
+      }
+    ]);
+    handler.bounds.extendWith(markers);
+    handler.fitMapToBounds();
+  }
+);
     </div>

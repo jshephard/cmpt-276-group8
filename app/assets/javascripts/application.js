@@ -15,7 +15,8 @@
 //= require bootstrap
 //= require turbolinks
 //= require_tree .
-
+//= require underscore
+//= require gmaps/google
 function reset_textbox_background(form_label) {
     $('#' + form_label + 'form').find('input').css("background-color", "");
 }
