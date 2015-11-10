@@ -13,7 +13,9 @@ gem 'coffee-script-source', '1.8.0', platforms: [:mswin]
 # See https://github.com/rails/execjs#readme for more supported runtimes
 gem 'therubyracer', platforms: [:ruby]
 gem 'therubyrhino', platforms: [:jruby]
-
+gem 'underscore-rails'
+gem 'gmaps4rails'
+gem "geocoder"
 gem 'tzinfo-data', platforms: [:mingw, :mswin, :jruby]
 
 # Use jquery as the JavaScript library
