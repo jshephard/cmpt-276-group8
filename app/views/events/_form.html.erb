@@ -42,19 +42,12 @@
                         <div class="field" style="float: left">
                             <span style="color: white">Latitude</span>
                             <br>
-                            <%=  f.number_field :Latitude, max:90, min:-90, step: 0.000001, class:"form-control" %>
-                                <span style="color: white">Latitude from Pin</span>
-                                <br>
-                                <input id="latbox">
+                            <%= f.number_field :Latitude, max:90, min:-90, step: 0.000001, class:"form-control" %>
                         </div>
                         <div class="field" style="float: right">
                             <span style="color: white">Longitude</span>
                             <br>
                             <%= f.number_field :Longitude, max:180, min:-180, step: 0.000001, class:"form-control" %>
-                                <span style="color: white">Longitude from Pin</span>
-                                <br>
-                                <input id="lngbox">
-
                         </div>
                     </div>
 

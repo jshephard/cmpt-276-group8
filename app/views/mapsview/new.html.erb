@@ -40,31 +40,53 @@
             mapTypeId: google.maps.MapTypeId.ROADMAP
         });
 
-        var iconBase = 'http://www.sfu.ca/~jsaadatm/png/';
         var icons = {
-            Concert: {
-                name: 'Concert',
-                icon: iconBase + 'concertlogo.png'
-            },
-            Emergency: {
-                name: 'Emergency',
-                icon: iconBase + 'emergencylogo.png'
-            },
-            LocalEvent: {
-                name: 'Local Event',
-                icon: iconBase + 'marketlogo.png'
-            }
+          Concert: {
+            name: 'Concert',
+            icon: "<%= asset_path 'icons/concertlogo.png' %>"
+          },
+          Emergency: {
+            name: 'Emergency',
+            icon:  "<%= asset_path 'icons/emergencylogo.png' %>"
+          },
+          Other: {
+            name: 'Other',
+            icon: "<%= asset_path 'icons/otherlogo.png' %>"
+          },
+          Festival: {
+            name: 'Festival',
+            icon: "<%= asset_path 'icons/festivallogo.png' %>"
+          },
+          Market: {
+            name: 'Market',
+            icon: "<%= asset_path 'icons/marketlogo.png' %>"
+          },
+          Party: {
+            name: 'Party',
+            icon: "<%= asset_path 'icons/partylogo.png' %>"
+          },
+          Expo: {
+            name: 'Expo',
+            icon: "<%= asset_path 'icons/expologo.png' %>"
+          },
+          Sporting: {
+            name: 'Sporting',
+            icon: "<%= asset_path 'icons/sportinglogo.png' %>"
+          },
+          Charity: {
+            name: 'Charity',
+            icon: "<%= asset_path 'icons/charity-LLL.png' %>"
+          }
         };
 
 
         function addMarker(feature) {
-
+            if (markers[feature.id] != null) //Already loaded this event.
+                return;
 
             var infowindow = new google.maps.InfoWindow({
                 content: contentString
             });
-
-
 
             var marker = new google.maps.Marker({
                 position: feature.position,
@@ -74,14 +96,7 @@
             marker.addListener('click', function () {
                 infowindow.open(map, marker);
             });
-            markers.push(marker);
-        }
-
-        function clearAndDeleteMarkers() {
-            for (var i = 0; i < markers.length; i++) {
-                markers[i].setMap(null);
-            }
-            markers = [];
+            markers[feature.id] = marker;
         }
 
         var legend = document.getElementById('legend');
@@ -101,10 +116,17 @@
             var sw = bounds.getSouthWest();
             var ne = bounds.getNorthEast();
 
-            $.getJSON("<%= events_path %>.json?lat_ne=" + ne.lat() + "&lat_sw=" + sw.lat() + "&long_sw=" + sw.lng() + "&long_ne=" + ne.lng(), function (data) {
-                clearAndDeleteMarkers();
-                $.each(data, function (key, value) {
+            var request = {
+              lat_ne: ne.lat(),
+              lat_sw: sw.lat(),
+              long_sw: sw.lng(),
+              long_ne: ne.lng()
+              //todo: can specify types of events
+              //events: ['Concert', ...]
+            };
 
+            $.getJSON("<%= events_path %>.json", request, function (data) {
+                $.each(data, function (key, value) {
                     contentString =
                         '<h3>'+value['Title']+'</h3>'+
                         'Description: '+value['Description']+
@@ -112,10 +134,9 @@
                         '<br>Date and Time: '+value['StartDate']+value['StartTime'];
 
                     var feature = {
-                        position: new google.maps.LatLng(value['Latitude'], value['Longitude']),
+                        id: value['id'], position: new google.maps.LatLng(value['Latitude'], value['Longitude']),
                         type: value['Category']
                     };
-
 
                     addMarker(feature);
                 });
