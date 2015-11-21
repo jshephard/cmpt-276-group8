@@ -41,6 +41,8 @@ gem 'bootstrap-sass', '3.3.5.0'
 
 gem 'puma'
 
+gem 'jquery-ui-rails'
+
 group :development, :test do
 	gem 'activerecord-jdbcsqlite3-adapter', platforms: [:jruby]
 	gem 'sqlite3', platforms: [:ruby]

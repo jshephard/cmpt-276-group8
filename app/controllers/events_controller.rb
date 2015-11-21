@@ -9,6 +9,7 @@ class EventsController < ApplicationController
     # We're gonna use json to load events in the background
     if request.format.json?
       # todo: cleanup
+      # todo: privacy
       if params[:lat_ne] and params[:long_ne]
         if params[:user_id]
           @events = Event.where("user_id = ? AND (\"Latitude\" <= ? AND \"Latitude\" >= ?) AND (\"Longitude\" <= ? AND \"Longitude\" >= ?)",
@@ -30,6 +31,7 @@ class EventsController < ApplicationController
   # GET /events/1
   # GET /events/1.json
   def show
+    #todo: privacy
   end
 
   # GET /events/new
