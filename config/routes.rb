@@ -1,5 +1,6 @@
 Rails.application.routes.draw do
 
+  resources :friendships
   resources :reports
 
   get 'admin' => 'admin#index'

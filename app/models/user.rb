@@ -9,6 +9,15 @@ class User < ActiveRecord::Base
   has_one :administrator, dependent: :destroy
   has_many :events
   has_many :reports, dependent: :destroy
+  
+  #friendship stuff :)
+  has_many :friendships
+  has_many :passive_friendships, :class_name => "Friendship", :foreign_key => "friend_id"
+
+  has_many :active_friends, -> { where(friendships: { approved: true}) }, :through => :friendships, :source => :friend
+  has_many :passive_friends, -> { where(friendships: { approved: true}) }, :through => :passive_friendships, :source => :user
+  has_many :pending_friends, -> { where(friendships: { approved: false}) }, :through => :friendships, :source => :friend
+  has_many :requested_friendships, -> { where(friendships: { approved: false}) }, :through => :passive_friendships, :source => :user
 
   has_secure_password
   before_save { email.downcase! }
@@ -37,6 +46,11 @@ class User < ActiveRecord::Base
   validates :email, presence: true, uniqueness: { case_sensitive: false }, format: { with: VALID_EMAIL_REGEX },
             length: { maximum: 254 }
 
+  # Gotta make some friends
+  def friends
+    active_friends | passive_friends
+  end
+  
   # Creates a session token that will help remember the current session
   def remember
     self.session_token = SecureRandom.urlsafe_base64
