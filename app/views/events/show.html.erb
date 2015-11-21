@@ -1,13 +1,26 @@
+<% if @event.nil? %>
+<h1 style="padding:0px 0px 0px 15px">Event does not exist.</h1>
+<div class="col-lg-6">
+  <div class="well bs-component">
+    Event does not exist.
+  </div>
+</div>
+<% else %>
 <h1 style="padding:0px 0px 0px 15px"><%=  @event.Title %></h1>
 <div class="col-lg-6">
   <div class="well bs-component">
+    <% if @event.user_id.nil? %>
+    <h5>posted by an <%= @event.username %></h5>
+    <% else %>
     <h5>posted by <%= link_to @event.username, user_url(@event.user_id) %></h5>
+    <% end %>
     <p class="well bs-component event-description"><%= @event.Description %></p>
     <h5>Starts <%= @event.StartDate.strftime("%F") + ' ' + @event.StartTime.strftime("%l:%M %P") %></h5>
     <h5>Ends <%= @event.EndDate.strftime("%F") + ' ' + @event.EndTime.strftime("%l:%M %P") %></h5>
     <h5><%= @event.Address %></h5>
     <% if logged_in? and (current_user.is_administrator? or @event.user_id == current_user.id) %>
     <%= link_to 'Edit', edit_event_path(@event), class:"btn btn-success", style:"color:white" %>
+    <%= link_to 'Delete', event_path(@event), method: :delete, data: { confirm: 'Are you sure?' }, class:"btn btn-primary", style:"color:white" %>
     <% end %>
     <% if logged_in? and @event.user_id != current_user.id %>
     <%= link_to 'Report Event', new_event_report_url(@event), class:"btn btn-primary", style:"color:white" %>
@@ -19,3 +32,4 @@
     <img src='http://maps.googleapis.com/maps/api/staticmap?center=<%= @event.Latitude.to_s + ',' + @event.Longitude.to_s %>&zoom=14&scale=false&size=330x300&maptype=roadmap&format=png&visual_refresh=true&markers=size:mid%7Ccolor:0xff0000%7C<%= @event.Latitude.to_s + ',' + @event.Longitude.to_s %>'/>
   </a>
 </div>
+<% end %>

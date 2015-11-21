@@ -14,21 +14,27 @@
         $("#events-table-body").html("");
         $.getJSON("<%= request.path %>.json?page=" + page, function(data) {
             $.each(data, function (key, value) {
+              if (value['user_url'] == null) {
                 $("#events-table-body").append("<tr>" +
-                        "<td>" + value['Title'] + "</td>" +
-                        "<td>" + value['Description'] + "</td>" +
-                        "<td>" + value['Address'] + "</td>" +
-                        "<td>" + value['Latitude'] + "</td>" +
-                        "<td>" + value['Longitude'] + "</td>" +
-                        "<td>" + value['Category'] + "</td>" +
-                        "<td>" + value['StartDate'] + "</td>" +
-                        "<td>" + value['StartTime'] + "</td>" +
-                        "<td>" + value['EndDate'] + "</td>" +
-                        "<td>" + value['EndTime'] + "</td>" +
-                        "<td><a href='" + value['show_url'] + "'>Show</a></td>" +
-                        "<td><a href='" + value['edit_url'] + "'>Edit</a></td>" +
-                        "<td><a data-confirm='Are you sure?' rel='nofollow' data-method='delete' href='"+ value['destroy_url'] + "'>Destroy</a></td>" +
-                        "</tr>");
+                    "<td><a href='" + value['show_url'] + "'>" + value['Title'] + "</a></td>" +
+                    "<td>" + value['Description'] + "</td>" +
+                    "<td>" + value['username'] + "</td>" +
+                    "<td>" + value['Address'] + "</td>" +
+                    "<td>" + value['Category'] + "</td>" +
+                    "<td>" + value['StartDate'] + " " + value['StartTime'] + "</td>" +
+                    "<td>" + value['EndDate'] + " " + value['EndTime'] + "</td>" +
+                    "</tr>");
+              } else {
+                $("#events-table-body").append("<tr>" +
+                    "<td><a href='" + value['show_url'] + "'>" + value['Title'] + "</a></td>" +
+                    "<td>" + value['Description'] + "</td>" +
+                    "<td><a href='" + value['user_url'] + "'>" + value['username'] + "</a></td>" +
+                    "<td>" + value['Address'] + "</td>" +
+                    "<td>" + value['Category'] + "</td>" +
+                    "<td>" + value['StartDate'] + " " + value['StartTime'] + "</td>" +
+                    "<td>" + value['EndDate'] + " " + value['EndTime'] + "</td>" +
+                    "</tr>");
+              }
             });
         }).fail(function() {
             alert("An error occurred fetching the events list.");
@@ -42,22 +48,18 @@
     });
 </script>
 
-<h1 style="padding:0px 0px 0px 15px">Listing Events</h1>
-
+<h1 style="padding:0px 0px 0px 15px">Events Index</h1>
+<div class="col-lg-8">
 <table class="table table-striped table-hover ">
   <thead>
     <tr>
       <th>Title</th>
       <th>Description</th>
+      <th>Posted By</th>
       <th>Address</th>
-      <th>Latitude</th>
-      <th>Longitude</th>
       <th>Category</th>
       <th>Start Date</th>
-      <th>Start Time</th>
       <th>End Date</th>
-      <th>End Time</th>
-      <th colspan="3"></th>
     </tr>
   </thead>
 
@@ -68,3 +70,4 @@
 <br><br>
 
 <%= link_to 'New Event', new_event_path, class:"btn btn-primary"%>
+</div>

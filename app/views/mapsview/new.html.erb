@@ -94,7 +94,11 @@
                 //Populate fields in the event modal
                 var latlng = data['Latitude'] + ',' + data['Longitude'];
                 $("#event-title").html(data['Title']);
-                $("#event-author").html('<a href="' + data['user_url'] + '">' + data['username'] + '</a>');
+                if (data['user_url'] == null) {
+                  $("#event-author").html(data['username']);
+                } else {
+                  $("#event-author").html('<a href="' + data['user_url'] + '">' + data['username'] + '</a>');
+                }
                 $("#event-content").html(data['Description']);
                 $("#event-category").html(data['Category']);
                 $("#event-icon").attr('src', icons[data['Category']].icon);
