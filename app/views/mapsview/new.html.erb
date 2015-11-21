@@ -92,6 +92,7 @@
             marker.addListener('click', function () {
               $.getJSON("<%= events_path %>/" + feature.id + ".json", function (data) {
                 //Populate fields in the event modal
+                var latlng = data['Latitude'] + ',' + data['Longitude'];
                 $("#event-title").html(data['Title']);
                 $("#event-author").html('<a href="' + data['user_url'] + '">' + data['username'] + '</a>');
                 $("#event-content").html(data['Description']);
@@ -101,10 +102,10 @@
                 $("#event-date-from").html(data['StartDate'] + ' ' + data['StartTime']);
                 $("#event-date-to").html(data['EndDate'] + ' ' + data['EndTime']);
                 $("#event-location").html(data['Address']);
+                $("#event-map-url").attr('href', 'https://www.google.ca/maps/place/' + latlng);
                 $("#event-map").attr('src', 'http://maps.googleapis.com/maps/api/staticmap?center=' +
-                        data['Latitude'] + ',' + data['Longitude'] +
-                    '&zoom=14&scale=false&size=330x300&maptype=roadmap&format=png&visual_refresh=true&' +
-                    'markers=size:mid%7Ccolor:0xff0000%7C' + data['Latitude'] + ',' + data['Longitude']);
+                    latlng + '&zoom=14&scale=false&size=330x300&maptype=roadmap&format=png&visual_refresh=true&' +
+                    'markers=size:mid%7Ccolor:0xff0000%7C' + latlng);
                 $("#event-box").modal();
               }).fail(function () {
                 alert("Error occurred fetching event information.");
@@ -185,7 +186,7 @@
             <h5>Ends <span id="event-date-to"/></h5>
             <h5 id="event-location"/>
           </div>
-          <div class="col-sm-2"><img id="event-map" /></div>
+          <div class="col-sm-2"><a id="event-map-url"><img id="event-map" /></a></div>
         </div>
       </div>
     </div>

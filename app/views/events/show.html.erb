@@ -1,52 +1,17 @@
-<p>
-  <strong>Title:</strong>
-  <%= @event.Title %>
-</p>
-
-<p>
-  <strong>Description:</strong>
-  <%= @event.Description %>
-</p>
-
-<p>
-  <strong>Address:</strong>
-  <%= @event.Address %>
-</p>
-
-<p>
-  <strong>Latitude:</strong>
-  <%= @event.Latitude %>
-</p>
-
-<p>
-  <strong>Longitude:</strong>
-  <%= @event.Longitude %>
-</p>
-
-<p>
-  <strong>Category:</strong>
-  <%= @event.Category %>
-</p>
-
-<p>
-  <strong>Starting Date:</strong>
-  <%= @event.StartDate %>
-</p>
-
-<p>
-  <strong>Starting Time:</strong>
-  <%= @event.StartTime %>
-</p>
-
-<p>
-  <strong>Ending Date:</strong>
-  <%= @event.EndDate %>
-</p>
-
-<p>
-  <strong>Ending Time:</strong>
-  <%= @event.EndTime %>
-</p>
-
-<%= link_to 'Edit', edit_event_path(@event) %> |
-<%= link_to 'Back', events_path %>
+<h1 style="padding:0px 0px 0px 15px"><%=  @event.Title %></h1>
+<div class="col-lg-6">
+  <div class="well bs-component">
+    <h5>posted by <%= link_to @event.username, user_url(@event.user_id) %></h5>
+    <p class="well bs-component" style="background-color: #6e87a0"><%= @event.Description %></p>
+    <h5>Starts <%= @event.StartDate.strftime("%F") + ' ' + @event.StartTime.strftime("%l:%M %P") %></h5>
+    <h5>Ends <%= @event.EndDate.strftime("%F") + ' ' + @event.EndTime.strftime("%l:%M %P") %></h5>
+    <h5><%= @event.Address %></h5>
+    <%= link_to 'Edit', edit_event_path(@event) %> |
+    <%= link_to 'Back', events_path %>
+  </div>
+</div>
+<div class="col-sm-2">
+  <a href='https://www.google.ca/maps/place/<%= @event.Latitude.to_s + ',' + @event.Longitude.to_s %>'>
+    <img src='http://maps.googleapis.com/maps/api/staticmap?center=<%= @event.Latitude.to_s + ',' + @event.Longitude.to_s %>&zoom=14&scale=false&size=330x300&maptype=roadmap&format=png&visual_refresh=true&markers=size:mid%7Ccolor:0xff0000%7C<%= @event.Latitude.to_s + ',' + @event.Longitude.to_s %>'/>
+  </a>
+</div>
