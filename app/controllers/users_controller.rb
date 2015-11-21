@@ -3,7 +3,7 @@ class UsersController < ApplicationController
   before_filter :require_logged_out, only: [:forgot_password, :request_password], unless: :require_admin
   before_filter :require_login, only: [:edit, :update, :destroy]
   before_filter :require_admin, only: [:index]
-  before_action :set_user, only: [:edit, :update, :destroy]
+  before_action :set_user, only: [:edit, :update, :destroy, :show]
   before_action :set_page, only: [:index]
 
   # GET /users
@@ -209,6 +209,14 @@ class UsersController < ApplicationController
         format.json { render json: { :message => 'Validation link invalid.', :redirect => root_path  },
                              status: :unprocessable_entity }
       end
+    end
+  end
+
+  def show
+    if !@user.nil?
+      #retrieve latest 5 events posted
+      #todo: public events only!
+      @events = Event.where(user_id: @user.id).where('EndDate > ?', DateTime.now).order(:created_at).limit(5)
     end
   end
 

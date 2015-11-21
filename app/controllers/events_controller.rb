@@ -11,10 +11,10 @@ class EventsController < ApplicationController
       if params[:lat_ne] and params[:long_ne]
         if params[:user_id]
           @events = Event.where("user_id = ? AND (\"Latitude\" <= ? AND \"Latitude\" >= ?) AND (\"Longitude\" <= ? AND \"Longitude\" >= ?)",
-            params[:user_id], params[:lat_ne], params[:lat_sw], params[:long_ne], params[:long_sw])
+            params[:user_id], params[:lat_ne], params[:lat_sw], params[:long_ne], params[:long_sw]).where('EndDate > ?', DateTime.now)
         else
           @events = Event.where("(\"Latitude\" <= ? AND \"Latitude\" >= ?) AND (\"Longitude\" <= ? AND \"Longitude\" >= ?)",
-            params[:lat_ne], params[:lat_sw], params[:long_ne], params[:long_sw])
+            params[:lat_ne], params[:lat_sw], params[:long_ne], params[:long_sw]).where('EndDate > ?', DateTime.now)
         end
       else
         if params[:user_id]

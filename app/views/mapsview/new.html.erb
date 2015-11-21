@@ -25,7 +25,7 @@
             };
             error = function () {
                 createMap(49.2780937, -122.922072);
-            }
+            };
 
             navigator.geolocation.getCurrentPosition(success, error);
         } else {
@@ -84,17 +84,31 @@
             if (markers[feature.id] != null) //Already loaded this event.
                 return;
 
-            var infowindow = new google.maps.InfoWindow({
-                content: contentString
-            });
-
             var marker = new google.maps.Marker({
                 position: feature.position,
                 icon: icons[feature.type].icon,
                 map: map
             });
             marker.addListener('click', function () {
-                infowindow.open(map, marker);
+              $.getJSON("<%= events_path %>/" + feature.id + ".json", function (data) {
+                //Populate fields in the event modal
+                $("#event-title").html(data['Title']);
+                $("#event-author").html('<a href="' + data['user_url'] + '">' + data['username'] + '</a>');
+                $("#event-content").html(data['Description']);
+                $("#event-category").html(data['Category']);
+                $("#event-icon").attr('src', icons[data['Category']].icon);
+                $("#event-address").html(data['Address']);
+                $("#event-date-from").html(data['StartDate'] + ' ' + data['StartTime']);
+                $("#event-date-to").html(data['EndDate'] + ' ' + data['EndTime']);
+                $("#event-location").html(data['Address']);
+                $("#event-map").attr('src', 'http://maps.googleapis.com/maps/api/staticmap?center=' +
+                        data['Latitude'] + ',' + data['Longitude'] +
+                    '&zoom=14&scale=false&size=330x300&maptype=roadmap&format=png&visual_refresh=true&' +
+                    'markers=size:mid%7Ccolor:0xff0000%7C' + data['Latitude'] + ',' + data['Longitude']);
+                $("#event-box").modal();
+              }).fail(function () {
+                alert("Error occurred fetching event information.");
+              });
             });
             markers[feature.id] = marker;
         }
@@ -127,12 +141,6 @@
 
             $.getJSON("<%= events_path %>.json", request, function (data) {
                 $.each(data, function (key, value) {
-                    contentString =
-                        '<h3>'+value['Title']+'</h3>'+
-                        'Description: '+value['Description']+
-                        '<br>Event Location: '+value['Address']+
-                        '<br>Date and Time: '+value['StartDate']+value['StartTime'];
-
                     var feature = {
                         id: value['id'], position: new google.maps.LatLng(value['Latitude'], value['Longitude']),
                         type: value['Category']
@@ -159,4 +167,27 @@
 
 <div id="map"></div>
 <div id="legend">
-    <h3>Legend</h3></div>
+    <h3>Legend</h3>
+</div>
+<div id="event-box" class="modal fade" role="dialog">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <img id="event-icon" /> <span id="event-title" style="font-size: 27px"/>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-sm-7">
+            <h5>posted by <span id="event-author"/></h5>
+            <p id="event-content" class="well bs-component" style="background-color: #6e87a0" />
+            <h5>Starts <span id="event-date-from"/></h5>
+            <h5>Ends <span id="event-date-to"/></h5>
+            <h5 id="event-location"/>
+          </div>
+          <div class="col-sm-2"><img id="event-map" /></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

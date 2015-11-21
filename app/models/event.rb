@@ -46,6 +46,11 @@ class Event < ActiveRecord::Base
     validates :Latitude, :Longitude, presence: true
     validates :StartDate, :StartTime, :EndDate, :EndTime, presence: true
 
+    def username
+        user = User.find_by(id: user_id)
+        return user.nil? ? 'Unregistered User' : user.username
+    end
+
     validate do |event|
       TimeValidator.new(event).validate
       DateValidator.new(event).validate

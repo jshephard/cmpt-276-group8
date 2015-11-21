@@ -1,0 +1,44 @@
+<% if @user.nil? %>
+<h1 style="padding:0px 0px 0px 15px">User</h1>
+<div class="col-lg-4">
+  <div class="well bs-component">
+    <h2>User not found!</h2>
+  </div>
+</div>
+<% else %>
+<h1 style="padding:0px 0px 0px 15px"><%= @user.username %></h1>
+<div class="col-lg-4">
+  <div class="well bs-component">
+    <h5>Joined on <%= @user.created_at.strftime("%F") %></h5><br/>
+
+    <% if logged_in? %>
+      <% if !@user.id.eql? current_user.id %>
+        <%= link_to 'Add as a friend!', '#', class:"btn btn-primary", style:"color:white" %>
+      <% end %>
+      <% if current_user.is_administrator? or @user.id.eql? current_user.id %>
+        <%= link_to 'Edit', edit_user_path(@user.id), class:"btn btn-primary", style:"color:white" %>
+      <% end %>
+    <% end %>
+    <br/>
+
+    <% if !@events.nil? and !@events.empty? %>
+        <br/><b>Latest Events:</b><br/>
+        <table class="table table-striped table-hover ">
+          <thead>
+            <th style="width: 60%">Name</th>
+            <th style="width: 40%">Starts</th>
+          </thead>
+          <tbody>
+
+        <% @events.each do |event| %>
+          <tr>
+            <td><%= link_to event.Title, event_url(event.id) %></td>
+            <td><%= event.StartDate.strftime("%F") %> @ <%= event.StartTime.strftime("%l:%M %P") %></td>
+          </tr>
+        <% end %>
+          </tbody>
+        </table>
+    <% end %>
+  </div>
+</div>
+<% end %>
