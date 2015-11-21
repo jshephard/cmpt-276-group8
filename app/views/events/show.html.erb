@@ -2,12 +2,16 @@
 <div class="col-lg-6">
   <div class="well bs-component">
     <h5>posted by <%= link_to @event.username, user_url(@event.user_id) %></h5>
-    <p class="well bs-component" style="background-color: #6e87a0"><%= @event.Description %></p>
+    <p class="well bs-component event-description"><%= @event.Description %></p>
     <h5>Starts <%= @event.StartDate.strftime("%F") + ' ' + @event.StartTime.strftime("%l:%M %P") %></h5>
     <h5>Ends <%= @event.EndDate.strftime("%F") + ' ' + @event.EndTime.strftime("%l:%M %P") %></h5>
     <h5><%= @event.Address %></h5>
-    <%= link_to 'Edit', edit_event_path(@event) %> |
-    <%= link_to 'Back', events_path %>
+    <% if logged_in? and (current_user.is_administrator? or @event.user_id == current_user.id) %>
+    <%= link_to 'Edit', edit_event_path(@event), class:"btn btn-success", style:"color:white" %>
+    <% end %>
+    <% if logged_in? and @event.user_id != current_user.id %>
+    <%= link_to 'Report Event', new_event_report_url(@event), class:"btn btn-primary", style:"color:white" %>
+    <% end %>
   </div>
 </div>
 <div class="col-sm-2">
