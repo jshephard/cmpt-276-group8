@@ -1,4 +1,14 @@
 class User < ActiveRecord::Base
+  
+  # Friendships
+  has_many :friendships
+  has_many :passive_friendships, :class_name => "Friendship", :foreign_key => "friend_id"
+  
+  has_many :active_friends, -> { where(friendships: { approved: true}) }, :through => :friendships, :source => :friend
+  has_many :passive_friends, -> { where(friendships: { approved: true}) }, :through => :passive_friendships, :source => :user
+  has_many :pending_friends, -> { where(friendships: { approved: false}) }, :through => :friendships, :source => :friend
+  has_many :requested_friendships, -> { where(friendships: { approved: false}) }, :through => :passive_friendships, :source => :user
+  
   # Don't use these directly. Instead, call is_admin? or is_promoter?
   # Used to avoid hitting DB multiple times
   attr_accessor :admin, :promoter
@@ -36,6 +46,15 @@ class User < ActiveRecord::Base
   validates :email, presence: true, uniqueness: { case_sensitive: false }, format: { with: VALID_EMAIL_REGEX },
             length: { maximum: 254 }
 
+  # Friendship Definition
+  def friends
+    active_friends | passive_friends
+  end
+  
+  def friend_with?(other_user)
+    friendships.find_by(friend_id: other_user.id)
+  end
+  
   # Creates a session token that will help remember the current session
   def remember
     self.session_token = SecureRandom.urlsafe_base64

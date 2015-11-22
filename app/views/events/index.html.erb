@@ -43,7 +43,7 @@
 </script>
 
 <h1 style="padding:0px 0px 0px 15px">Listing Events</h1>
-
+<div style="padding:0px 15px 0px 15px">
 <table class="table table-striped table-hover ">
   <thead>
     <tr>
@@ -63,8 +63,9 @@
 
   <tbody id="events-table-body" />
 </table>
-<a id="prev-page" class="btn btn-primary">Previous Page</a>  <a id="next-page" class="btn btn-primary">Next Page</a>
 
-<br><br>
 
-<%= link_to 'New Event', new_event_path, class:"btn btn-primary"%>
+    <a id="prev-page" class="btn btn-primary">Previous Page</a>  <a id="next-page" class="btn btn-primary">Next Page</a>
+    <br><br>
+    <%= link_to 'New Event', new_event_path, class:"btn btn-primary"%>
+</div>

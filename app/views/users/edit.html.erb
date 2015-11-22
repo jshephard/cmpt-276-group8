@@ -24,6 +24,8 @@
 </script>
 <%= render 'form', :button_name => 'Save Edits' %>
 
-<% if current_user.is_administrator? or @user.id == current_user.id %>
-<a href='<%= user_path(@user) %>' data-method='delete' rel='nofollow' data-confirm='Are you sure?'>Delete Account</a>
-<% end %>
+<div style="clear:both; padding:0px 0px 0px 15px">
+    <% if current_user.is_administrator? or @user.id == current_user.id %>
+        <a href='<%= user_path(@user) %>' data-method='delete' rel='nofollow' data-confirm='Are you sure?' class="btn btn-danger">Delete Account</a>
+    <% end %>
+</div>
