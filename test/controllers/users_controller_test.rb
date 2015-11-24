@@ -3,7 +3,7 @@ require 'test_helper'
 class UsersControllerTest < ActionController::TestCase
   test "should get index" do
     get :index
-    assert_response :success
+    assert_redirected_to login_path
   end
 
   test "should get new" do
