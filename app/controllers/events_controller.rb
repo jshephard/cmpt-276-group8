@@ -10,13 +10,20 @@ class EventsController < ApplicationController
     if request.format.json?
       # todo: cleanup
       # todo: privacy
+      range = Time.now + 7.days
+      if params[:day_range]
+        range = (Time.now + params[:day_range].to_i.days);
+      end
+
       if params[:lat_ne] and params[:long_ne]
         if params[:user_id]
           @events = Event.where("user_id = ? AND (\"Latitude\" <= ? AND \"Latitude\" >= ?) AND (\"Longitude\" <= ? AND \"Longitude\" >= ?)",
-            params[:user_id], params[:lat_ne], params[:lat_sw], params[:long_ne], params[:long_sw]).where('EndDate > ?', DateTime.now)
+            params[:user_id], params[:lat_ne], params[:lat_sw], params[:long_ne], params[:long_sw]).where('EndDate > ?', DateTime.now).
+              where('EndDate < ? OR StartDate < ?', range, range)
         else
           @events = Event.where("(\"Latitude\" <= ? AND \"Latitude\" >= ?) AND (\"Longitude\" <= ? AND \"Longitude\" >= ?)",
-            params[:lat_ne], params[:lat_sw], params[:long_ne], params[:long_sw]).where('EndDate > ?', DateTime.now)
+            params[:lat_ne], params[:lat_sw], params[:long_ne], params[:long_sw]).where('EndDate > ?', DateTime.now).
+              where('EndDate < ? OR StartDate < ?', range, range)
         end
       else
         if params[:user_id]

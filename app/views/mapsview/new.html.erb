@@ -81,8 +81,12 @@
 
 
         function addMarker(feature) {
-            if (markers[feature.id] != null) //Already loaded this event.
+            if (markers[feature.id] != null) { //Already loaded this event.
+                markers[feature.id].marked = false;
+                if (markers[feature.id].getMap() == null)
+                  markers[feature.id].setMap(map);
                 return;
+            }
 
             var marker = new google.maps.Marker({
                 position: feature.position,
@@ -121,6 +125,62 @@
             markers[feature.id] = marker;
         }
 
+        //https://stackoverflow.com/questions/9329446/for-each-over-an-array-in-javascript
+        function arrayHasOwnIndex(array, prop) {
+          return array.hasOwnProperty(prop) && /^0$|^[1-9]\d*$/.test(prop) && prop <= 4294967294; // 2^32 - 2
+        }
+
+        //Following two functions used for hiding events when out of view/out of date range
+        function markEvents()
+        {
+          for (key in markers) {
+              if (arrayHasOwnIndex(markers, key)) {
+                markers[key].marked = true;
+              }
+          }
+        }
+
+        function hideMarkedEvents()
+        {
+          for (key in markers) {
+              if (arrayHasOwnIndex(markers, key)) {
+                if (markers[key].marked) {
+                  markers[key].setMap(null);
+                }
+              }
+          }
+        }
+
+        function fetchEvents()
+        {
+            var bounds = map.getBounds();
+            var sw = bounds.getSouthWest();
+            var ne = bounds.getNorthEast();
+
+            var request = {
+              lat_ne: ne.lat(),
+              lat_sw: sw.lat(),
+              long_sw: sw.lng(),
+              long_ne: ne.lng(),
+              day_range: $("#slider").slider("value")
+            };
+
+            $.getJSON("<%= events_path %>.json", request, function (data) {
+                markEvents();
+                $.each(data, function (key, value) {
+                    var feature = {
+                        id: value['id'], position: new google.maps.LatLng(value['Latitude'], value['Longitude']),
+                        type: value['Category']
+                    };
+
+                    addMarker(feature);
+                });
+                hideMarkedEvents();
+            }).fail(function () {
+                alert("Error occurred fetching events.");
+            });
+        }
+
         var legend = document.getElementById('legend');
         for (var key in icons) {
             var type = icons[key];
@@ -133,32 +193,23 @@
 
         map.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push(legend);
 
+        $("#slider").slider({
+            range: "min",
+            value: 7,
+            min: 1,
+            max: 30,
+            slide: function( event, ui ) {
+              $( "#amount" ).val( ui.value );
+            },
+            stop: function( event, ui ) {
+              fetchEvents();
+            }
+        });
+        $( "#amount" ).val( $( "#slider" ).slider( "value" ) );
+        map.controls[google.maps.ControlPosition.TOP_CENTER].push(document.getElementById("controls"));
+
         google.maps.event.addListener(map, 'idle', function () {
-            var bounds = map.getBounds();
-            var sw = bounds.getSouthWest();
-            var ne = bounds.getNorthEast();
-
-            var request = {
-              lat_ne: ne.lat(),
-              lat_sw: sw.lat(),
-              long_sw: sw.lng(),
-              long_ne: ne.lng()
-              //todo: can specify types of events
-              //events: ['Concert', ...]
-            };
-
-            $.getJSON("<%= events_path %>.json", request, function (data) {
-                $.each(data, function (key, value) {
-                    var feature = {
-                        id: value['id'], position: new google.maps.LatLng(value['Latitude'], value['Longitude']),
-                        type: value['Category']
-                    };
-
-                    addMarker(feature);
-                });
-            }).fail(function () {
-                alert("Error occurred fetching events.");
-            });
+            fetchEvents();
         });
 
         //Credits to BenjiZombie @ https://github.com/twbs/bootstrap/issues/2475
@@ -176,6 +227,11 @@
 <div id="map"></div>
 <div id="legend">
     <h3>Legend</h3>
+</div>
+<div id="controls" style="width:300px; height:50px; margin-top: 10px; background: #4e5d6c; padding: 5px">
+  <label for="amount">Range of days:</label>
+  <input type="text" id="amount" readonly style="border:0; color:#f6931f; font-weight:bold; background: #4e5d6c;">
+  <div id="slider"></div>
 </div>
 <div id="event-box" class="modal fade" role="dialog">
   <div class="modal-dialog modal-lg">
