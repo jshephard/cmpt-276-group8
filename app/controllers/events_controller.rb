@@ -6,31 +6,31 @@ class EventsController < ApplicationController
   # GET /events
   # GET /events.json
   def index
-    # We're gonna use json to load events in the background
     if request.format.json?
-      # todo: cleanup
-      # todo: privacy
-      range = Time.now + 7.days
-      if params[:day_range]
-        range = (Time.now + params[:day_range].to_i.days);
+      scope = Event
+      
+      # Don't include events that have already ended
+      scope = scope.where('EndDate > ?', DateTime.now)
+      if params[:user_id]
+        scope = scope.where("user_id = ?", params[:user_id])
       end
 
       if params[:lat_ne] and params[:long_ne]
-        if params[:user_id]
-          @events = Event.where("user_id = ? AND (\"Latitude\" <= ? AND \"Latitude\" >= ?) AND (\"Longitude\" <= ? AND \"Longitude\" >= ?)",
-            params[:user_id], params[:lat_ne], params[:lat_sw], params[:long_ne], params[:long_sw]).where('EndDate > ?', DateTime.now).
-              where('EndDate < ? OR StartDate < ?', range, range)
-        else
-          @events = Event.where("(\"Latitude\" <= ? AND \"Latitude\" >= ?) AND (\"Longitude\" <= ? AND \"Longitude\" >= ?)",
-            params[:lat_ne], params[:lat_sw], params[:long_ne], params[:long_sw]).where('EndDate > ?', DateTime.now).
-              where('EndDate < ? OR StartDate < ?', range, range)
+        # Request from events map
+        
+        # How many days into future to look for events
+        range = Time.now + 7.days
+        if params[:day_range]
+          range = (Time.now + params[:day_range].to_i.days);
         end
+        scope = scope.where('EndDate < ? OR StartDate < ?', range, range)
+
+        scope = scope.where("(\"Latitude\" <= ? AND \"Latitude\" >= ?) AND (\"Longitude\" <= ? AND \"Longitude\" >= ?)",
+            params[:lat_ne], params[:lat_sw], params[:long_ne], params[:long_sw])
+        @events = scope.all
       else
-        if params[:user_id]
-          @events = Event.where(user_id: params[:user_id]).where('EndDate > ?', DateTime.now).page(@page)
-        else
-          @events = Event.where('EndDate > ?', DateTime.now).page(@page)
-        end
+        # Request from events index
+        @events = scope.page(@page)
       end
     end
   end
