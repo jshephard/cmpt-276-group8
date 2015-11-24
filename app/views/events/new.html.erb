@@ -1,8 +1,64 @@
 <div id="content">
-<div id="form">
-<h1 style="padding:0px 0px 0px 15px">New Event</h1>
-<%= render 'form' %>
+    <div id="form">
+        <h1 style="padding:0px 0px 0px 15px">New Event</h1>
+        <%= render 'form' %>
 
-</div>
-</div>
+        <style>
+            #map {
+                width: 600px;
+                height: 600px;
+            }
+        </style>
+        <script>
+            var locationClicked = false;
+            var marker;
+            var myLatlng;
 
+            function initialize() {
+              if (navigator.geolocation) {
+                success = function (position) {
+                  createMap(position.coords.latitude, position.coords.longitude);
+                };
+                error = function () {
+                  createMap(49.2780937, -122.922072);
+                }
+
+                navigator.geolocation.getCurrentPosition(success, error);
+              } else {
+                createMap(49.2780937, -122.922072);
+              }
+            }
+
+            function createMap(lat, long) {
+                var mapCanvas = document.getElementById('map');
+                var mapOptions = {
+                    center: new google.maps.LatLng(lat, long),
+                    zoom: 11,
+                    mapTypeId: google.maps.MapTypeId.ROADMAP
+                }
+                var map = new google.maps.Map(mapCanvas, mapOptions)
+                google.maps.event.addListener(map, 'click', function (event) {
+                    addMarker(event.latLng, map);
+                    document.getElementById("event_Latitude").value = event.latLng.lat().toFixed(6);
+                    document.getElementById("event_Longitude").value = event.latLng.lng().toFixed(6);
+                });
+            }
+
+            function addMarker(location, map) {
+                if (locationClicked == true) {
+                    marker.setMap(null);
+                }
+                marker = new google.maps.Marker({
+                    position: location,
+                    map: map
+                });
+                locationClicked = true;
+
+            }
+        </script>
+        <script async defer src="https://maps.googleapis.com/maps/api/js?callback=initialize">
+        </script>
+
+        <div id="map"></div>
+    </div>
+  </div>

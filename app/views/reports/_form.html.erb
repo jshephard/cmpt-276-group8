@@ -15,7 +15,11 @@
       <span style="color: white">Please explain why this event should be removed:</span><br>
       <%= f.text_area :description, class:"form-control", placeholder:"Description"  %>
     </div>
-    <%= f.hidden_field :event_id, :value => params[:id]  %>
+    <% if params[:event_id] %>
+    <%= f.hidden_field :event_id, :value => params[:event_id]  %>
+    <% else %>
+        <%= f.hidden_field :event_id, :value => params[:id]  %>
+    <% end %>
     <div class="actions">
       <br>
       <%= f.submit value: button_name, class:"btn btn-success", style:"color:white" %>

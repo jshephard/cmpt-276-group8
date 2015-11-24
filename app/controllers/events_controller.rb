@@ -1,6 +1,7 @@
 class EventsController < ApplicationController
   before_action :set_event, only: [:show, :edit, :update, :destroy]
   before_action :set_page, only: [:index]
+  before_filter :require_login, only: [:edit, :update, :destroy]
 
   # GET /events
   # GET /events.json
@@ -8,19 +9,20 @@ class EventsController < ApplicationController
     # We're gonna use json to load events in the background
     if request.format.json?
       # todo: cleanup
+      # todo: privacy
       if params[:lat_ne] and params[:long_ne]
         if params[:user_id]
-          @events = Event.where("user_id = ? AND (latitude <= ? AND latitude >= ?) AND (longitude <= ? AND longitude >= ?)", 
-            params[:user_id], params[:lat_ne], params[:lat_sw], params[:long_ne], params[:long_sw])
+          @events = Event.where("user_id = ? AND (\"Latitude\" <= ? AND \"Latitude\" >= ?) AND (\"Longitude\" <= ? AND \"Longitude\" >= ?)",
+            params[:user_id], params[:lat_ne], params[:lat_sw], params[:long_ne], params[:long_sw]).where('EndDate > ?', DateTime.now)
         else
-          @events = Event.where("(latitude <= ? AND latitude >= ?) AND (longitude <= ? AND longitude >= ?)", 
-            params[:lat_ne], params[:lat_sw], params[:long_ne], params[:long_sw])
+          @events = Event.where("(\"Latitude\" <= ? AND \"Latitude\" >= ?) AND (\"Longitude\" <= ? AND \"Longitude\" >= ?)",
+            params[:lat_ne], params[:lat_sw], params[:long_ne], params[:long_sw]).where('EndDate > ?', DateTime.now)
         end
       else
         if params[:user_id]
-          @events = Event.where(user_id: params[:user_id]).page(@page)
+          @events = Event.where(user_id: params[:user_id]).where('EndDate > ?', DateTime.now).page(@page)
         else
-          @events = Event.page(@page)
+          @events = Event.where('EndDate > ?', DateTime.now).page(@page)
         end
       end
     end
@@ -29,6 +31,7 @@ class EventsController < ApplicationController
   # GET /events/1
   # GET /events/1.json
   def show
+    #todo: privacy
   end
 
   # GET /events/new
@@ -38,12 +41,21 @@ class EventsController < ApplicationController
 
   # GET /events/1/edit
   def edit
+    if current_user.is_administrator?
+      if @event.nil?
+        redirect_to events_path, alert: 'Event does not exist.'
+      end
+    elsif @event.nil? or @event.user_id != current_user.id
+      redirect_to root_path, alert: 'You do not have permission to view this page.'
+    end
   end
 
   # POST /events
   # POST /events.json
   def create
     @event = Event.new(event_params)
+
+    #todo: check limits for users
     
     if logged_in?
       @event.user_id = current_user.id
@@ -63,13 +75,26 @@ class EventsController < ApplicationController
   # GET /events/user/1
   # GET /events/user/1.json
   def list
-    @events = Event.where(user: params[:id])
+    #todo: privacy
+    @events = Event.where(user: params[:id]).where('EndDate > ?', DateTime.now)
   end
 
   # PATCH/PUT /events/1
   # PATCH/PUT /events/1.json
   def update
     respond_to do |format|
+      if current_user.is_administrator?
+        if @event.nil?
+          format.html { redirect_to events_path, alert: 'Event does not exist.' }
+          format.json { render json: {message: 'Event does not exist.', redirect: events_path }, status: :unprocessable_entity }
+          return
+        end
+      elsif @event.nil? or @event.user_id != current_user.id
+        format.html { redirect_to root_path, alert: 'You do not have permission to view this page.' }
+        format.json { render json: {message: 'You do not have permission to view this page.', redirect: root_path }, status: :unprocessable_entity }
+        return
+      end
+
       if @event.update(event_params)
         format.html { redirect_to @event, notice: 'Event was successfully updated.' }
         format.json { render :show, status: :ok, location: @event }
@@ -83,8 +108,20 @@ class EventsController < ApplicationController
   # DELETE /events/1
   # DELETE /events/1.json
   def destroy
-    @event.destroy
     respond_to do |format|
+      if current_user.is_administrator?
+        if @event.nil?
+          format.html { redirect_to events_path, alert: 'Event does not exist.' }
+          format.json { render json: {message: 'Event does not exist.', redirect: events_path }, status: :unprocessable_entity }
+          return
+        end
+      elsif @event.nil? or @event.user_id != current_user.id
+        format.html { redirect_to root_path, alert: 'You do not have permission to view this page.' }
+        format.json { render json: {message: 'You do not have permission to view this page.', redirect: root_path }, status: :unprocessable_entity }
+        return
+      end
+
+      @event.destroy
       format.html { redirect_to events_url, notice: 'Event was successfully destroyed.' }
       format.json { head :no_content }
     end
@@ -93,7 +130,7 @@ class EventsController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_event
-      @event = Event.find(params[:id])
+      @event = Event.find_by(id: params[:id])
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.

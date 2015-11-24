@@ -38,6 +38,16 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  def require_verified
+    if logged_in?
+      if !current_user.is_validated?
+        redirect_to root_path, alert: 'You must verify your email address before accessing this page.'
+      end
+    else
+      redirect_to login_path, alert: 'You must be logged in to access this page.'
+    end
+  end
+
   def set_page
     @page = params[:page].nil? ? 1 : params[:page]
   end

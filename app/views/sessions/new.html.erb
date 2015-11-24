@@ -1,9 +1,6 @@
 <h1 style="padding:0px 0px 0px 15px">Login</h1>
 <div class="col-lg-4">
 <div class="well bs-component">
-<% flash.each do |message_type, message| %>
-    <div class="alert alert-<%= message_type %>"><%= message %></div>
-<% end %>
 <script>
     $(document).ready(function() {
         $('#login_form').on('ajax:success', function (event, data, status, xhr) {

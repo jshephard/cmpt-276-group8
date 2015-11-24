@@ -20,6 +20,7 @@
                   "<td>" + value['last_name'] + "</td>" +
                   "<td>" + value['is_administrator?'] + "</td>" +
                   "<td>" + value['is_promoter?'] + "</td>" +
+                  "<td><a href='" + value['user_url'] + "'>Profile</a></td>" +
                   "<td><a href='" + value['edit_url'] + "'>Edit</a></td>" +
                   "<td><a href='" + value['user_events_url'] + "'>Events</a></td>" +
                   "</tr>");
@@ -46,7 +47,7 @@
         <th>Last name</th>
         <th>Admin</th>
         <th>Promoter</th>
-        <th width='3'/>
+        <th width='4'/>
       </tr>
       </thead>
       <tbody id="users-table-body" />

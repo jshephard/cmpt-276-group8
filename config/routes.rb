@@ -3,7 +3,6 @@ Rails.application.routes.draw do
   resources :reports
 
   get 'admin' => 'admin#index'
-
   root 'mapsview#new'
 
   resources :events do

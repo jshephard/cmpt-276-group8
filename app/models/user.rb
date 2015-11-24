@@ -27,9 +27,8 @@ class User < ActiveRecord::Base
   validates :password, length: { minimum: 8 }, on: :update, allow_blank: true,
             format: { with: VALID_PASSWORD_REGEX, message: 'must contain either a digit, a capital letter or a symbol.'}
 
-  #todo some more validations here, e.g. maximum length
-  validates :first_name, presence: true
-  validates :last_name, presence: true
+  validates :first_name, presence: true, length: { maximum: 30 }
+  validates :last_name, presence: true, length: { maximum: 30 }
   validates :date_of_birth, presence: true #todo validate format?
 
   #Regex from http://davidcel.is/posts/stop-validating-email-addresses-with-regex/
