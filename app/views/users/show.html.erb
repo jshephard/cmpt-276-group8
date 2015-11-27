@@ -36,11 +36,13 @@
           <tbody>
 
         <% @events.each do |event| %>
-          <tr>
-            <td><%= link_to event.Title, event_url(event.id) %></td>
-            <td><%= event.StartDate.strftime("%F") %> @ <%= event.StartTime.strftime("%l:%M %P") %></td>
-            <td><%= event.EndDate.strftime("%F") %> @ <%= event.EndTime.strftime("%l:%M %P") %></td>
-          </tr>
+          <% if event.id_private != true or current_user.friend_with?(@user) or @user.friend_with?(current_user) or current_user.is_administrator? or @user.id.eql? current_user.id %>
+            <tr>
+              <td><%= link_to event.Title, event_url(event.id) %></td>
+              <td><%= event.StartDate.strftime("%F") %> @ <%= event.StartTime.strftime("%l:%M %P") %></td>
+              <td><%= event.EndDate.strftime("%F") %> @ <%= event.EndTime.strftime("%l:%M %P") %></td>
+            </tr>
+          <% end %>
         <% end %>
           </tbody>
         </table>
@@ -55,7 +57,7 @@
       </thead>
         <% @user.friends.each do |friend| %>
         <tr>
-          <td><%= friend.username %></td> 
+          <td><%= link_to friend.username, user_url(friend.id) %></td> 
           <td><%= friend.first_name %> <%= friend.last_name %></td> 
           <td><%= friend.email %></td>
           <% if current_user == @user %>
@@ -77,7 +79,7 @@
           </thead>
           <% @user.requested_friendships.each do |request| %>
             <tr>
-              <td><%= request.username %></td>
+              <td><%= link_to request.username, user_url(request.id) %></td>
               <td><%= request.first_name %> <%= request.last_name %></td>
               <td><%= request.email %></td>
               <td><%= link_to "Accept", friendship_path(:id => request), :method => "put" %> </td> 

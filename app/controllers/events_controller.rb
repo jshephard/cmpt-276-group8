@@ -13,16 +13,16 @@ class EventsController < ApplicationController
       if params[:lat_ne] and params[:long_ne]
         if params[:user_id]
           @events = Event.where("user_id = ? AND (\"Latitude\" <= ? AND \"Latitude\" >= ?) AND (\"Longitude\" <= ? AND \"Longitude\" >= ?)",
-            params[:user_id], params[:lat_ne], params[:lat_sw], params[:long_ne], params[:long_sw]).where('EndDate > ?', DateTime.now)
+            params[:user_id], params[:lat_ne], params[:lat_sw], params[:long_ne], params[:long_sw]).where('EndDate > ?', DateTime.now).where('id_private != ?', true)
         else
           @events = Event.where("(\"Latitude\" <= ? AND \"Latitude\" >= ?) AND (\"Longitude\" <= ? AND \"Longitude\" >= ?)",
-            params[:lat_ne], params[:lat_sw], params[:long_ne], params[:long_sw]).where('EndDate > ?', DateTime.now)
+            params[:lat_ne], params[:lat_sw], params[:long_ne], params[:long_sw]).where('EndDate > ?', DateTime.now).where('id_private != ?', true)
         end
       else
         if params[:user_id]
-          @events = Event.where(user_id: params[:user_id]).where('EndDate > ?', DateTime.now).page(@page)
+          @events = Event.where(user_id: params[:user_id]).where('EndDate > ?', DateTime.now).page(@page).where('id_private != ?', true)
         else
-          @events = Event.where('EndDate > ?', DateTime.now).page(@page)
+          @events = Event.where('EndDate > ?', DateTime.now).page(@page).where('id_private != ?', true)
         end
       end
     end
@@ -135,6 +135,6 @@ class EventsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def event_params
-      params.require(:event).permit(:Title, :Description, :Address, :Latitude, :Longitude, :Category, :StartDate, :StartTime, :EndDate, :EndTime)
+      params.require(:event).permit(:Title, :Description, :Address, :Latitude, :Longitude, :Category, :StartDate, :StartTime, :EndDate, :EndTime, :id_private)
     end
 end

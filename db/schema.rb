@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151121220022) do
+ActiveRecord::Schema.define(version: 20151127043444) do
 
   create_table "administrators", force: :cascade do |t|
     t.integer  "user_id"
@@ -33,6 +33,7 @@ ActiveRecord::Schema.define(version: 20151121220022) do
     t.time     "EndTime"
     t.date     "StartDate"
     t.date     "EndDate"
+    t.boolean  "id_private"
   end
 
   add_index "events", ["user_id"], name: "index_events_on_user_id"
