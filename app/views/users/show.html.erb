@@ -13,7 +13,7 @@
 
     <% if logged_in? %>
       <% if @user.id != current_user.id %>
-        <% if current_user.friend_with?(@user) %>
+        <% if current_user.friend_with?(@user) or @user.friend_with?(current_user) %>
           <div class="btn btn-primary"> No other tasks.</div>
         <% else %>
           <%= link_to 'Add as a friend!', friendships_path(:friend_id => @user), :method => :post, class:"btn btn-primary", style:"color:white" %>
