@@ -32,4 +32,10 @@
     <img src='http://maps.googleapis.com/maps/api/staticmap?center=<%= @event.Latitude.to_s + ',' + @event.Longitude.to_s %>&zoom=14&scale=false&size=330x300&maptype=roadmap&format=png&visual_refresh=true&markers=size:mid%7Ccolor:0xff0000%7C<%= @event.Latitude.to_s + ',' + @event.Longitude.to_s %>'/>
   </a>
 </div>
+<!-- GoStats Simple HTML Based Code -->
+<a target="_blank" title="website stats" href="http://gostats.com"><img alt="website stats" 
+src="http://c4.gostats.com/bin/count/a_410047/t_7/i_2/z_0/show_hits/counter.png" 
+style="border-width:0" /></a>
+<!-- End GoStats Simple HTML Based Code -->
+
 <% end %>
