@@ -14,6 +14,7 @@ class EventsController < ApplicationController
         if params[:user_id]
           @events = Event.where("user_id = ? AND (\"Latitude\" <= ? AND \"Latitude\" >= ?) AND (\"Longitude\" <= ? AND \"Longitude\" >= ?)",
             params[:user_id], params[:lat_ne], params[:lat_sw], params[:long_ne], params[:long_sw]).where('EndDate > ?', DateTime.now).where('id_private != ?', true)
+          
         else
           @events = Event.where("(\"Latitude\" <= ? AND \"Latitude\" >= ?) AND (\"Longitude\" <= ? AND \"Longitude\" >= ?)",
             params[:lat_ne], params[:lat_sw], params[:long_ne], params[:long_sw]).where('EndDate > ?', DateTime.now).where('id_private != ?', true)
@@ -25,13 +26,33 @@ class EventsController < ApplicationController
           @events = Event.where('EndDate > ?', DateTime.now).page(@page).where('id_private != ?', true)
         end
       end
+      if logged_in?
+        if @events.nil?
+          @events = Event.joins("INNER JOIN \"friendships\" ON \"friendships\".user_id = events.user_id").where("friendships.user_id = ? OR friendships.friend_id = ?", current_user.id, current_user.id).where('id_private = ?', true)
+          @events = Event.joins("INNER JOIN \"friendships\" ON \"friendships\".user_id = " + current_user.id.to_s).where("friendships.user_id = events.user_id OR friendships.friend_id = events.user_id").where('id_private = ?', true)
+        else
+          @events = @events + Event.joins("INNER JOIN \"friendships\" ON \"friendships\".user_id = events.user_id").where("friendships.user_id = ? OR friendships.friend_id = ?", current_user.id, current_user.id).where('id_private = ?', true)
+          @events = @events + Event.joins("INNER JOIN \"friendships\" ON \"friendships\".user_id = " + current_user.id.to_s).where("friendships.user_id = events.user_id OR friendships.friend_id = events.user_id").where('id_private = ?', true)
+
+        end
+     end
     end
   end
 
   # GET /events/1
   # GET /events/1.json
   def show
-    #todo: privacy
+    if !@event.nil?
+      friendship = Friendship.find_by(user_id: @event.user_id)
+      if !friendship.nil? and friendship.user_id != current_user.id and friendship.friend_id != current_user.id
+        redirect_to root_path, alert: "You don't have permission to view this event."
+      end
+      friendship = Friendship.find_by(user_id: current_user.id)
+      if !friendship.nil? and friendship.user_id != @event.user.id and friendship.friend_id != @event.user.id
+        redirect_to root_path, alert: "You don't have permission to view this event."
+      end
+      
+    end
   end
 
   # GET /events/new
