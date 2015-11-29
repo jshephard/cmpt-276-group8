@@ -14,6 +14,17 @@ class EventsController < ApplicationController
       if params[:user_id]
         scope = scope.where("user_id = ?", params[:user_id])
       end
+      scope = scope.where('id_private != ?', true)
+
+      if logged_in?
+        @events = Event.joins("INNER JOIN \"friendships\" ON \"friendships\".user_id = events.user_id").
+          where("friendships.user_id = ? OR friendships.friend_id = ?", current_user.id, current_user.id).
+          where('id_private = ?', true)
+
+        @events = @events.union(Event.joins("INNER JOIN \"friendships\" ON \"friendships\".user_id = " + current_user.id.to_s).
+          where("friendships.user_id = events.user_id OR friendships.friend_id = events.user_id").
+          where('id_private = ?', true))
+      end
 
       if params[:lat_ne] and params[:long_ne]
         # Request from events map
@@ -27,10 +38,10 @@ class EventsController < ApplicationController
 
         scope = scope.where("(\"Latitude\" <= ? AND \"Latitude\" >= ?) AND (\"Longitude\" <= ? AND \"Longitude\" >= ?)",
             params[:lat_ne], params[:lat_sw], params[:long_ne], params[:long_sw])
-        @events = scope.all
+        @events = @events.nil? ? scope.all : @events.union(scope)
       else
         # Request from events index
-        @events = scope.page(@page)
+        @events = @events.nil? ? scope.page(@page) : @events.union(scope).page(@page)
       end
     end
   end
@@ -38,7 +49,21 @@ class EventsController < ApplicationController
   # GET /events/1
   # GET /events/1.json
   def show
-    #todo: privacy
+    if !@event.nil? and @event.id_private
+      if !logged_in?
+        redirect_to root_path, alert: "You don't have permission to view this event."
+      end
+
+      # Check for existence of friendship
+      friendship = Friendship.find_by(user_id: @event.user_id)
+      if !friendship.nil? and friendship.user_id != current_user.id and friendship.friend_id != current_user.id
+        redirect_to root_path, alert: "You don't have permission to view this event."
+      end
+      friendship = Friendship.find_by(user_id: current_user.id)
+      if !friendship.nil? and friendship.user_id != @event.user.id and friendship.friend_id != @event.user.id
+        redirect_to root_path, alert: "You don't have permission to view this event."
+      end
+    end
   end
 
   # GET /events/new
@@ -142,6 +167,6 @@ class EventsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def event_params
-      params.require(:event).permit(:Title, :Description, :Address, :Latitude, :Longitude, :Category, :StartDate, :StartTime, :EndDate, :EndTime)
+      params.require(:event).permit(:Title, :Description, :Address, :Latitude, :Longitude, :Category, :StartDate, :StartTime, :EndDate, :EndTime, :id_private)
     end
 end

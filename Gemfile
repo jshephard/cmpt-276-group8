@@ -43,6 +43,8 @@ gem 'puma'
 
 gem 'jquery-ui-rails'
 
+gem 'active_record_union'
+
 group :development, :test do
 	gem 'activerecord-jdbcsqlite3-adapter', platforms: [:jruby]
 	gem 'sqlite3', platforms: [:ruby]

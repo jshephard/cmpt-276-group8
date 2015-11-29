@@ -9,18 +9,22 @@
 <h1 style="padding:0px 0px 0px 15px"><%= @user.username %></h1>
 <div class="col-lg-5">
   <div class="well bs-component">
-    <h5>Joined on <%= @user.created_at.strftime("%F") %></h5><br/>
+    <h5>Joined on <%= @user.created_at.strftime("%F") %></h5>
 
     <% if logged_in? %>
       <% if @user.id != current_user.id %>
-        <%= link_to 'Add as a friend!', '#', class:"btn btn-primary", style:"color:white" %>
+        <% if current_user.friend_with?(@user) or @user.friend_with?(current_user) %>
+          <div class="btn btn-primary"> No other tasks.</div>
+        <% else %>
+          <%= link_to 'Add as a friend!', friendships_path(:friend_id => @user), :method => :post, class:"btn btn-primary", style:"color:white" %>
+        <% end %>
       <% end %>
       <% if current_user.is_administrator? or @user.id.eql? current_user.id %>
         <%= link_to 'Edit', edit_user_path(@user.id), class:"btn btn-primary", style:"color:white" %>
       <% end %>
       <br/><br/>
     <% end %>
-
+    
     <% if !@events.nil? and !@events.empty? %>
         <b>Latest Events:</b><br/>
         <table class="table table-striped table-hover">
@@ -32,13 +36,56 @@
           <tbody>
 
         <% @events.each do |event| %>
-          <tr>
-            <td><%= link_to event.Title, event_url(event.id) %></td>
-            <td><%= event.StartDate.strftime("%F") %> @ <%= event.StartTime.strftime("%l:%M %P") %></td>
-            <td><%= event.EndDate.strftime("%F") %> @ <%= event.EndTime.strftime("%l:%M %P") %></td>
-          </tr>
+          <% if event.id_private != true or current_user.friend_with?(@user) or @user.friend_with?(current_user) or current_user.is_administrator? or @user.id.eql? current_user.id %>
+            <tr>
+              <td><%= link_to event.Title, event_url(event.id) %></td>
+              <td><%= event.StartDate.strftime("%F") %> @ <%= event.StartTime.strftime("%l:%M %P") %></td>
+              <td><%= event.EndDate.strftime("%F") %> @ <%= event.EndTime.strftime("%l:%M %P") %></td>
+            </tr>
+          <% end %>
         <% end %>
           </tbody>
+        </table>
+    <% end %>
+    <b>Friends:</b><br/>
+    <table class="table table-striped table-hover">
+      <thead>
+        <th style="width: 12%">Username</th>
+        <th style="width: 18%">Name</th>
+        <th style="width: 40%">Email</th>
+        <th style="width: 30%"></th>
+      </thead>
+        <% @user.friends.each do |friend| %>
+        <tr>
+          <td><%= link_to friend.username, user_url(friend.id) %></td> 
+          <td><%= friend.first_name %> <%= friend.last_name %></td> 
+          <td><%= friend.email %></td>
+          <% if current_user == @user %>
+            <td><%= link_to "Remove", friendship_path(:id => friend), :method => :delete %></td>
+          <% end %>
+        </tr>
+      <% end %>
+    </table>
+
+    <% if current_user == @user %>
+        <b>Friend Requests:</b><br/>
+        <table class="table table-striped table-hover">
+          <thead>
+            <th style="width: 12%">Username</th>
+            <th style="width: 18%">Name</th>
+            <th style="width: 40%">Email</th>
+            <th style="width: 15%"></th>
+            <th style="width: 15%"></th>
+          </thead>
+          <% @user.requested_friendships.each do |request| %>
+            <tr>
+              <td><%= link_to request.username, user_url(request.id) %></td>
+              <td><%= request.first_name %> <%= request.last_name %></td>
+              <td><%= request.email %></td>
+              <td><%= link_to "Accept", friendship_path(:id => request), :method => "put" %> </td> 
+              <td><%= link_to "Decline", friendship_path(:id => request), :method => :delete %> </td>
+            </tr>
+          <% end %>
         </table>
     <% end %>
   </div>

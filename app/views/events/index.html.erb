@@ -50,24 +50,24 @@
 
 <h1 style="padding:0px 0px 0px 15px">Events Index</h1>
 <div class="col-lg-8">
-<table class="table table-striped table-hover ">
-  <thead>
-    <tr>
-      <th>Title</th>
-      <th>Description</th>
-      <th>Posted By</th>
-      <th>Address</th>
-      <th>Category</th>
-      <th>Start Date</th>
-      <th>End Date</th>
-    </tr>
-  </thead>
+  <table class="table table-striped table-hover ">
+    <thead>
+      <tr>
+        <th>Title</th>
+        <th>Description</th>
+        <th>Posted By</th>
+        <th>Address</th>
+        <th>Category</th>
+        <th>Start Date</th>
+        <th>End Date</th>
+      </tr>
+    </thead>
 
-  <tbody id="events-table-body" />
-</table>
-<a id="prev-page" class="btn btn-primary">Previous Page</a>  <a id="next-page" class="btn btn-primary">Next Page</a>
+    <tbody id="events-table-body" />
+  </table>
 
-<br><br>
 
-<%= link_to 'New Event', new_event_path, class:"btn btn-primary"%>
+  <a id="prev-page" class="btn btn-primary">Previous Page</a>  <a id="next-page" class="btn btn-primary">Next Page</a>
+  <br><br>
+  <%= link_to 'New Event', new_event_path, class:"btn btn-primary"%>
 </div>

@@ -82,11 +82,15 @@
                             <span style="color: white">Ending Time</span>
                             <br>
                             <%= f.time_field :EndTime, class:"form-control" %>
-                            <br>
                         </div>
                     </div>
+                    
+                    <div class="field" style="clear: both">
+                        <span style="color: white">Private (Friends Only)</span><br>
+                        <%= f.check_box :id_private %>
+                    </div>
 
-                    <div class="actions" style="clear: both">
+                    <div class="actions" style="clear: both"><br>
                         <button type="reset" class="btn btn-warning">Clear</button>
                         <button type="submit" class="btn btn-success">Submit</button>
                     </div>
