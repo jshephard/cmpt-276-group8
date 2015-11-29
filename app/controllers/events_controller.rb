@@ -14,16 +14,22 @@ class EventsController < ApplicationController
       if params[:user_id]
         scope = scope.where('"user_id" = ?', params[:user_id])
       end
-      scope = scope.where('"id_private" != ?', true)
 
       if logged_in?
-        @events = Event.joins('INNER JOIN "friendships" ON "friendships"."user_id" = "events"."user_id"').
-          where('"friendships"."user_id" = ? OR "friendships"."friend_id" = ?', current_user.id, current_user.id).
-          where('"id_private" = ?', true)
+        # An administrator can always see private events.
+        if !current_user.is_administrator?
+          scope = scope.where('("id_private" != ? OR "user_id" = ?)', true, current_user.id)
 
-        @events = @events.union(Event.joins('INNER JOIN "friendships" ON "friendships"."user_id" = ' + current_user.id.to_s).
-          where('"friendships"."user_id" = "events"."user_id" OR "friendships"."friend_id" = "events"."user_id"').
-          where('"id_private" = ?', true))
+          @events = Event.joins('INNER JOIN "friendships" ON "friendships"."user_id" = "events"."user_id"').
+            where('"friendships"."user_id" = ? OR "friendships"."friend_id" = ?', current_user.id, current_user.id).
+            where('"id_private" = ?', true)
+
+          @events = @events.union(Event.joins('INNER JOIN "friendships" ON "friendships"."user_id" = ' + current_user.id.to_s).
+            where('"friendships"."user_id" = "events"."user_id" OR "friendships"."friend_id" = "events"."user_id"').
+            where('"id_private" = ?', true))
+        end
+      else
+        scope = scope.where('"id_private" != ?', true)
       end
 
       if params[:lat_ne] and params[:long_ne]
@@ -52,16 +58,22 @@ class EventsController < ApplicationController
     if !@event.nil? and @event.id_private
       if !logged_in?
         redirect_to root_path, alert: "You don't have permission to view this event."
+        return
+      elsif current_user.is_administrator?
+        return # Administrators can view all events
       end
 
       # Check for existence of friendship
       friendship = Friendship.find_by(user_id: @event.user_id)
       if !friendship.nil? and friendship.user_id != current_user.id and friendship.friend_id != current_user.id
         redirect_to root_path, alert: "You don't have permission to view this event."
+        return
       end
+
       friendship = Friendship.find_by(user_id: current_user.id)
       if !friendship.nil? and friendship.user_id != @event.user.id and friendship.friend_id != @event.user.id
         redirect_to root_path, alert: "You don't have permission to view this event."
+        return
       end
     end
   end
@@ -102,13 +114,6 @@ class EventsController < ApplicationController
         format.json { render json: @event.errors, status: :unprocessable_entity }
       end
     end
-  end
-  
-  # GET /events/user/1
-  # GET /events/user/1.json
-  def list
-    #todo: privacy
-    @events = Event.where(user: params[:id]).where('EndDate > ?', DateTime.now)
   end
 
   # PATCH/PUT /events/1

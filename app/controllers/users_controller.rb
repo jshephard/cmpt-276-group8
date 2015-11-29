@@ -35,6 +35,7 @@ class UsersController < ApplicationController
     admin_save = true
 
     if current_user.is_administrator?
+      # Update promoter status
       if params[:user][:is_promoter] == '1'
         unless @user.is_promoter?
           promoter = Promoter.new(user_id: @user.id)
@@ -44,6 +45,7 @@ class UsersController < ApplicationController
         Promoter.where(user_id: @user.id).destroy_all
       end
 
+      # Update administrator status
       if params[:user][:is_administrator] == '1'
         if !@user.is_administrator?
           admin = Administrator.new(user_id: @user.id)
@@ -54,6 +56,7 @@ class UsersController < ApplicationController
         Administrator.where(user_id: @user.id).destroy_all
       end
 
+      # Update email validation status
       if params[:user][:is_validated] == '1'
         @user.reset_email_validation
       elsif params[:user][:is_validated] == '0'
@@ -160,6 +163,7 @@ class UsersController < ApplicationController
       @user = User.find_by(password_validation_token: params[:token])
 
       respond_to do |format|
+        # Check if the password reset email has not timed out
         if @user and @user.password_validation_timeout > DateTime.now and @user.password_validation_token != ''
           password = SecureRandom.urlsafe_base64[0..10]
           @user.password = password
@@ -214,9 +218,29 @@ class UsersController < ApplicationController
 
   def show
     if !@user.nil?
-      #retrieve latest 5 events posted
-      #todo: public events only!
-      @events = Event.where(user_id: @user.id).where('EndDate > ?', DateTime.now).order(:created_at).limit(5)
+      #Retrieve latest 5 events posted by user
+      @events = Event.where(user_id: @user.id).where('"EndDate" > ?', DateTime.now)
+
+      if !logged_in?
+        # Only show public events to guests
+        @events = @events.where('"id_private" = ?', false).order(:created_at).limit(5)
+      elsif current_user.is_administrator? or @user.id == current_user.id
+        # Show all events to administrators and the user itself
+        @events = @events.order(:created_at).limit(5)
+      else
+        # Only show private events to friends
+        @events = @events.where('"id_private" = ?', false)
+
+        # Show private events for friends
+        @events = @events.union(Event.where(user_id: @user.id).joins('INNER JOIN "friendships" ON "friendships"."user_id" = ' + current_user.id.to_s).
+              where('"friendships"."user_id" = "events"."user_id" OR "friendships"."friend_id" = "events"."user_id"').
+              where('"id_private" = ?', true))
+        @events = @events.union(Event.where(user_id: @user.id).joins('INNER JOIN "friendships" ON "friendships"."user_id" = "events"."user_id"').
+              where('"friendships"."user_id" = ? OR "friendships"."friend_id" = ?', current_user.id, current_user.id).
+              where('"id_private" = ?', true))
+
+        @events = @events.order(:created_at).limit(5)
+      end
     end
   end
 
