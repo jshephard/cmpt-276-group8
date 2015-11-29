@@ -1,9 +1,13 @@
 require 'test_helper'
 
 class UsersControllerTest < ActionController::TestCase
+  setup do
+    @newuser = users(:one)
+  end
+
   test "should get index" do
     get :index
-    assert_redirected_to login_path
+    assert_response :success
   end
 
   test "should get new" do
@@ -11,24 +15,25 @@ class UsersControllerTest < ActionController::TestCase
     assert_response :success
   end
 
-  test "should get destroy" do
-    get :destroy
-    assert_response :success
+  test "should not get destroy" do
+    post :destroy, id: @newuser.id
+    assert_redirected_to login_path
   end
 
   test "should get create" do
-    get :create
-    assert_response :success
+    assert_difference('User.count') do
+      post :create, user: { username: 'newuser2', password: '!password', password_confirmation: '!password',
+                            email: 'newemail@school.com', first_name: @newuser.first_name, last_name: @newuser.last_name,
+                            date_of_birth: @newuser.date_of_birth}
+    end
+    assert_redirected_to root_path
+    assert_equal 'User successfully created.', flash[:notice]
   end
 
   test "should not get edit" do
     get :edit
-    assert_response '302'
+    assert_redirected_to login_path
   end
-
-  #todo: create?
-  #todo: update
-  #todo: destroy
 
   test 'password validation token times out' do
     @user = User.first
@@ -51,6 +56,21 @@ class UsersControllerTest < ActionController::TestCase
     # Should fail, password has been reset
     post :forgot_password, {:format => 'json', token: @user.password_validation_token}
     assert_response 422
+  end
+
+  test 'email validation' do
+    # Generate email validation token
+    @newuser.set_email_validation
+
+    # Use token and validate email
+    get :validate_email, token: @newuser.email_validation_token
+    assert_redirected_to root_path
+    assert_equal 'Email was successfully validated.', flash[:notice]
+
+    # Attempt to use same token again
+    get :validate_email, token: @newuser.email_validation_token
+    assert_redirected_to root_path
+    assert_equal 'Validation link invalid.', flash[:notice]
   end
 
 end

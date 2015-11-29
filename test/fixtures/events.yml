@@ -1,33 +1,59 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
-# one:
-#   Title: MyString
-#   Description: MyString
-#   Latitude: 1
-#   Longitude: 1
-#   Category: MyString
-#   Day: 1
-#   Month: 1
-#   Year: 1
-
-# two:
-#   Title: MyString
-#   Description: MyString
-#   Latitude: 1
-#   Longitude: 1
-#   Category: MyString
-#   Day: 1
-#   Month: 1
-#   Year: 1
-
 newevent:
+  id: 1
   Title: "New Event"
   Latitude: 15.123456
   Longitude: 90.123456
   Description: "A new event."
   Category: "Party"
+  Address: "123 1st St"
   StartDate: 2016-06-15
   EndDate: 2016-06-15
-  StartTime: 12:30
-  EndTime: 12:30
-  
+  StartTime: 2000-01-01 13:00:00.000000
+  EndTime: 2000-01-01 13:30:00.000000
+  user_id: 1
+  id_private: false
+
+admin_private:
+  id: 2
+  Title: "New Event"
+  Latitude: 15.123456
+  Longitude: 90.123456
+  Description: "A new event."
+  Category: "Party"
+  Address: "123 1st St"
+  StartDate: 2016-06-15
+  EndDate: 2016-06-15
+  StartTime: 2000-01-01 13:00:00.000000
+  EndTime: 2000-01-01 13:30:00.000000
+  user_id: 1
+  id_private: true
+
+notfriend_private:
+  Title: "New Event"
+  Latitude: 15.123456
+  Longitude: 90.123456
+  Description: "A new event."
+  Category: "Party"
+  Address: "123 1st St"
+  StartDate: 2016-06-15
+  EndDate: 2016-06-15
+  StartTime: 2000-01-01 13:00:00.000000
+  EndTime: 2000-01-01 13:30:00.000000
+  user_id: 3
+  id_private: true
+
+private:
+  Title: "New Event"
+  Latitude: 15.123456
+  Longitude: 90.123456
+  Description: "A new event."
+  Category: "Party"
+  Address: "123 1st St"
+  StartDate: 2016-06-15
+  EndDate: 2016-06-15
+  StartTime: 2000-01-01 13:00:00.000000
+  EndTime: 2000-01-01 13:30:00.000000
+  user_id: 2
+  id_private: false

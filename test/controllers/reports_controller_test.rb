@@ -1,24 +1,28 @@
 require 'test_helper'
 
 class ReportsControllerTest < ActionController::TestCase
-  test "should get index" do
+  setup do
+    @report = reports(:one)
+  end
+
+  test "should not get index" do
     get :index
-    assert_response :success
+    assert_redirected_to login_path
   end
 
-  test "should get new" do
+  test "should not get new" do
     get :new
-    assert_response :success
+    assert_redirected_to login_path
   end
 
-  test "should get create" do
+  test "should not get create" do
     get :create
-    assert_response :success
+    assert_redirected_to login_path
   end
 
-  test "should get destroy" do
-    get :destroy
-    assert_response :success
+  test "should not get destroy" do
+    post :destroy, id: @report.id
+    assert_redirected_to login_path
   end
 
 end

@@ -3,8 +3,13 @@ require 'test_helper'
 class UserFlowsTest < ActionDispatch::IntegrationTest
   fixtures :all
 
-  def login
+  def login_admin
     post_via_redirect login_path, session: { username: users(:one).username, password: '!password', remember_me: false }
+    assert_equal 'Logged in successfully.', flash[:notice]
+  end
+
+  def login_normal
+    post_via_redirect login_path, session: { username: users(:two).username, password: '!password', remember_me: false }
     assert_equal 'Logged in successfully.', flash[:notice]
   end
 
@@ -12,25 +17,20 @@ class UserFlowsTest < ActionDispatch::IntegrationTest
     get login_path
     assert_response :success
 
-    login
-    #assert_equals root_path, path
+    login_normal
+
     get profile_path
     assert_response :success
   end
 
   # Test events
-  test 'not logged in and can submit event' do
-    assert false
-  end
-
   test 'logged in and can submit event' do
-    login
+    login_normal
 
     get new_event_path
     assert_response :success
 
     event = Event.first
-    # doesn't work!
     assert_difference 'Event.count' do
       post_via_redirect events_path, event: {
           Title: event.Title,
@@ -47,6 +47,47 @@ class UserFlowsTest < ActionDispatch::IntegrationTest
     end
   end
 
+  test 'admin can view private event' do
+    login_admin
+
+    event = events(:newevent)
+
+    get event_path(event)
+    assert_response :success
+  end
+
+  test 'friend can view private event' do
+    login_normal
+
+    event = events(:admin_private)
+
+    get event_path(event)
+    assert_response :success
+  end
+
+  test 'unknown user can not view private event' do
+    login_normal
+
+    event = events(:notfriend_private)
+
+    get event_path(event)
+    assert_redirected_to root_path
+    assert_equal "You don't have permission to view this event.", flash[:alert]
+  end
+
+  test 'admin can delete event' do
+    login_admin
+
+    event = events(:newevent)
+
+    get event_path(event)
+    assert_response :success
+
+    assert_difference 'Event.count', -1 do
+      delete_via_redirect event_path(event)
+    end
+  end
+
   # Test reports
   test 'not logged in cannot submit report' do
     post reports_path, report: {event_id: Event.first.id, description: 'Bad event!'}
@@ -54,7 +95,7 @@ class UserFlowsTest < ActionDispatch::IntegrationTest
   end
 
   test 'login and submit valid report' do
-    login
+    login_admin
 
     get new_report_path, id: Event.first.id
     assert_response :success
@@ -64,7 +105,7 @@ class UserFlowsTest < ActionDispatch::IntegrationTest
   end
 
   test 'login and submit invalid report' do
-    login
+    login_admin
 
     post_via_redirect reports_path, report: {event_id: Event.first.id, description: ''}
     assert_equal 'Unable to submit report.', flash[:notice]

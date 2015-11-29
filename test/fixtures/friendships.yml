@@ -2,10 +2,7 @@
 
 one:
   user_id: 1
-  friend_id: 1
-  approved: false
+  friend_id: 2
+  approved: true
 
-two:
-  user_id: 1
-  friend_id: 1
-  approved: false
+

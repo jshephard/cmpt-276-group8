@@ -20,11 +20,11 @@ class EventsController < ApplicationController
         if !current_user.is_administrator?
           scope = scope.where('("id_private" != ? OR "user_id" = ?)', true, current_user.id)
 
-          @events = Event.joins('INNER JOIN "friendships" ON "friendships"."user_id" = "events"."user_id"').
+          @events = Event.joins('INNER JOIN "friendships" ON "friendships"."approved" = "t" AND "friendships"."user_id" = "events"."user_id"').
             where('"friendships"."user_id" = ? OR "friendships"."friend_id" = ?', current_user.id, current_user.id).
             where('"id_private" = ?', true)
 
-          @events = @events.union(Event.joins('INNER JOIN "friendships" ON "friendships"."user_id" = ' + current_user.id.to_s).
+          @events = @events.union(Event.joins('INNER JOIN "friendships" ON "friendships"."approved" = "t" AND "friendships"."user_id" = ' + current_user.id.to_s).
             where('"friendships"."user_id" = "events"."user_id" OR "friendships"."friend_id" = "events"."user_id"').
             where('"id_private" = ?', true))
         end
@@ -65,13 +65,13 @@ class EventsController < ApplicationController
 
       # Check for existence of friendship
       friendship = Friendship.find_by(user_id: @event.user_id)
-      if !friendship.nil? and friendship.user_id != current_user.id and friendship.friend_id != current_user.id
+      if !friendship.nil? and friendship.approved and friendship.user_id != current_user.id and friendship.friend_id != current_user.id
         redirect_to root_path, alert: "You don't have permission to view this event."
         return
       end
 
       friendship = Friendship.find_by(user_id: current_user.id)
-      if !friendship.nil? and friendship.user_id != @event.user.id and friendship.friend_id != @event.user.id
+      if !friendship.nil? and friendship.approved and friendship.user_id != @event.user.id and friendship.friend_id != @event.user.id
         redirect_to root_path, alert: "You don't have permission to view this event."
         return
       end
@@ -103,6 +103,9 @@ class EventsController < ApplicationController
     
     if logged_in?
       @event.user_id = current_user.id
+    else
+      # Guests can not create private events.
+      @event.id_private = false;
     end
 
     respond_to do |format|

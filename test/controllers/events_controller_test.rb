@@ -3,12 +3,12 @@ require 'test_helper'
 class EventsControllerTest < ActionController::TestCase
   setup do
     @event = events(:newevent)
+    @privateevent = events(:private)
   end
 
   test "should get index" do
     get :index
     assert_response :success
-    assert_not_nil assigns(:events)
   end
 
   test "should get new" do
@@ -18,33 +18,59 @@ class EventsControllerTest < ActionController::TestCase
 
   test "should create event" do
     assert_difference('Event.count') do
-      post :create, event: { Category: @event.Category, Day: @event.Day, Description: @event.Description, Latitude: @event.Latitude, Longitude: @event.Longitude, Month: @event.Month, Title: @event.Title, Year: @event.Year }
+      post :create, event: { Category: @event.Category,
+                             StartDate: @event.StartDate,
+                             EndDate: @event.EndDate,
+                             StartTime: @event.StartTime,
+                             EndTime: @event.EndTime,
+                             Address: @event.Address,
+                             Description: @event.Description,
+                             Latitude: @event.Latitude,
+                             Longitude: @event.Longitude,
+                             Title: @event.Title,
+                             id_private: false }
     end
 
     assert_redirected_to event_path(assigns(:event))
   end
 
-  test "should show event" do
+  test "should show public event" do
     get :show, id: @event
     assert_response :success
   end
 
-  test "should get edit" do
+  test "should not show private event" do
+    get :show, id: @privateevent
+    assert_redirected_to root_path
+  end
+
+  test "should not get edit" do
     get :edit, id: @event
-    assert_response :success
+    assert_redirected_to login_path
   end
 
-  test "should update event" do
-    patch :update, id: @event, event: { Category: @event.Category, Day: @event.Day, Description: @event.Description, Latitude: @event.Latitude, Longitude: @event.Longitude, Month: @event.Month, Title: @event.Title, Year: @event.Year }
-    assert_redirected_to event_path(assigns(:event))
+  test "should not update event" do
+    # Not logged in, can not edit/delete events.
+    patch :update, id: @event, event: { Category: @event.Category,
+                                        StartDate: @event.StartDate,
+                                        EndDate: @event.EndDate,
+                                        StartTime: @event.StartTime,
+                                        EndTime: @event.EndTime,
+                                        Description: @event.Description,
+                                        Latitude: @event.Latitude,
+                                        Longitude: @event.Longitude,
+                                        Title: @event.Title,
+                                        id_private: @event.id_private }
+    assert_redirected_to login_path # event_path(assigns(:event))
   end
 
-  test "should destroy event" do
-    assert_difference('Event.count', -1) do
+  test "should not destroy event" do
+    # As we are not logged in, event will not be destroyed
+    assert_difference('Event.count', 0) do
       delete :destroy, id: @event
     end
 
-    assert_redirected_to events_path
+    assert_redirected_to login_path
   end
   
 end

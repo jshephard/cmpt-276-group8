@@ -46,17 +46,6 @@ ActiveRecord::Schema.define(version: 20151127043444) do
     t.datetime "updated_at", null: false
   end
 
-  create_table "notifications", force: :cascade do |t|
-    t.integer  "user_id"
-    t.string   "message",    limit: 255
-    t.string   "link",       limit: 255
-    t.boolean  "viewed"
-    t.datetime "created_at",             null: false
-    t.datetime "updated_at",             null: false
-  end
-
-  add_index "notifications", ["user_id"], name: "index_notifications_on_user_id"
-
   create_table "promoters", force: :cascade do |t|
     t.integer  "user_id"
     t.datetime "created_at", null: false
@@ -87,7 +76,6 @@ ActiveRecord::Schema.define(version: 20151127043444) do
     t.string   "password_validation_token",   limit: 255
     t.string   "email_validation_token",      limit: 255
     t.datetime "password_validation_timeout"
-    t.datetime "email_validation_timeout"
   end
 
 end

@@ -15,13 +15,17 @@
           $.each(data, function (key, value) {
               $("#users-table-body").append("<tr>" +
                   "<td>" + value['username'] + "</td>" +
-                  "<td>" + value['email'] + "</td>" +
                   "<td>" + value['first_name'] + "</td>" +
                   "<td>" + value['last_name'] + "</td>" +
+                  <% if logged_in? and current_user.is_administrator? %>
+                  "<td>" + value['email'] + "</td>" +
                   "<td>" + value['is_administrator?'] + "</td>" +
                   "<td>" + value['is_promoter?'] + "</td>" +
+                  <% end %>
                   "<td><a href='" + value['user_url'] + "'>Profile</a></td>" +
+                  <% if logged_in? and current_user.is_administrator? %>
                   "<td><a href='" + value['edit_url'] + "'>Edit</a></td>" +
+                  <% end %>
                   "<td><a href='" + value['user_events_url'] + "'>Events</a></td>" +
                   "</tr>");
           });
@@ -43,12 +47,16 @@
       <thead>
       <tr>
         <th>Username</th>
-        <th>Email</th>
         <th>First name</th>
         <th>Last name</th>
+        <% if logged_in? and current_user.is_administrator? %>
+        <th>Email</th>
         <th>Admin</th>
         <th>Promoter</th>
         <th width='4'/>
+        <% else %>
+        <th width='2'/>
+        <% end %>
       </tr>
       </thead>
       <tbody id="users-table-body" />
