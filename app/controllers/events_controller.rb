@@ -10,20 +10,20 @@ class EventsController < ApplicationController
       scope = Event
       
       # Don't include events that have already ended
-      scope = scope.where('EndDate > ?', DateTime.now)
+      scope = scope.where('"EndDate" > ?', DateTime.now)
       if params[:user_id]
-        scope = scope.where("user_id = ?", params[:user_id])
+        scope = scope.where('"user_id" = ?', params[:user_id])
       end
-      scope = scope.where('id_private != ?', true)
+      scope = scope.where('"id_private" != ?', true)
 
       if logged_in?
-        @events = Event.joins("INNER JOIN \"friendships\" ON \"friendships\".user_id = events.user_id").
-          where("friendships.user_id = ? OR friendships.friend_id = ?", current_user.id, current_user.id).
-          where('id_private = ?', true)
+        @events = Event.joins('INNER JOIN "friendships" ON "friendships"."user_id" = "events"."user_id"').
+          where('"friendships"."user_id" = ? OR "friendships"."friend_id" = ?', current_user.id, current_user.id).
+          where('"id_private" = ?', true)
 
-        @events = @events.union(Event.joins("INNER JOIN \"friendships\" ON \"friendships\".user_id = " + current_user.id.to_s).
-          where("friendships.user_id = events.user_id OR friendships.friend_id = events.user_id").
-          where('id_private = ?', true))
+        @events = @events.union(Event.joins('INNER JOIN "friendships" ON "friendships"."user_id" = ' + current_user.id.to_s).
+          where('"friendships"."user_id" = "events"."user_id" OR "friendships"."friend_id" = "events"."user_id"').
+          where('"id_private" = ?', true))
       end
 
       if params[:lat_ne] and params[:long_ne]
@@ -34,9 +34,9 @@ class EventsController < ApplicationController
         if params[:day_range]
           range = (Time.now + params[:day_range].to_i.days);
         end
-        scope = scope.where('EndDate < ? OR StartDate < ?', range, range)
+        scope = scope.where('"EndDate" < ? OR "StartDate" < ?', range, range)
 
-        scope = scope.where("(\"Latitude\" <= ? AND \"Latitude\" >= ?) AND (\"Longitude\" <= ? AND \"Longitude\" >= ?)",
+        scope = scope.where('("Latitude" <= ? AND "Latitude" >= ?) AND ("Longitude" <= ? AND "Longitude" >= ?)',
             params[:lat_ne], params[:lat_sw], params[:long_ne], params[:long_sw])
         @events = @events.nil? ? scope.all : @events.union(scope)
       else
