@@ -14,12 +14,12 @@ class UserFlowsTest < ActionDispatch::IntegrationTest
   end
 
   test 'login and browse site' do
-    get login_path
+    get_via_redirect login_path
     assert_response :success
 
     login_normal
 
-    get profile_path
+    get_via_redirect profile_path
     assert_response :success
   end
 
@@ -27,7 +27,7 @@ class UserFlowsTest < ActionDispatch::IntegrationTest
   test 'logged in and can submit event' do
     login_normal
 
-    get new_event_path
+    get_via_redirect new_event_path
     assert_response :success
 
     event = Event.first
@@ -52,7 +52,7 @@ class UserFlowsTest < ActionDispatch::IntegrationTest
 
     event = events(:newevent)
 
-    get event_path(event)
+    get_via_redirect event_path(event)
     assert_response :success
   end
 
@@ -61,7 +61,7 @@ class UserFlowsTest < ActionDispatch::IntegrationTest
 
     event = events(:admin_private)
 
-    get event_path(event)
+    get_via_redirect event_path(event)
     assert_response :success
   end
 
@@ -70,7 +70,8 @@ class UserFlowsTest < ActionDispatch::IntegrationTest
 
     event = events(:notfriend_private)
 
-    get event_path(event)
+    get_via_redirect event_path(event)
+
     assert_redirected_to root_path
     assert_equal "You don't have permission to view this event.", flash[:alert]
   end
@@ -80,7 +81,7 @@ class UserFlowsTest < ActionDispatch::IntegrationTest
 
     event = events(:newevent)
 
-    get event_path(event)
+    get_via_redirect event_path(event)
     assert_response :success
 
     assert_difference 'Event.count', -1 do
@@ -97,7 +98,7 @@ class UserFlowsTest < ActionDispatch::IntegrationTest
   test 'login and submit valid report' do
     login_admin
 
-    get new_report_path, id: Event.first.id
+    get_via_redirect new_report_path, id: Event.first.id
     assert_response :success
 
     post reports_path, report: {event_id: Event.first.id, description: 'Bad event!'} #:format => 'json', 'report[description]' => 'Crap!', 'report[event_id]' => 1
