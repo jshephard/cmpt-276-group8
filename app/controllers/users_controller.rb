@@ -232,10 +232,10 @@ class UsersController < ApplicationController
         @events = @events.where('"id_private" = ?', false)
 
         # Show private events for friends
-        @events = @events.union(Event.where(user_id: @user.id).joins('INNER JOIN "friendships" ON "friendships"."approved" = "t" AND "friendships"."user_id" = ' + current_user.id.to_s).
+        @events = @events.union(Event.where(user_id: @user.id).joins('INNER JOIN "friendships" ON "friendships"."approved" = \'t\' AND "friendships"."user_id" = ' + current_user.id.to_s).
               where('"friendships"."user_id" = "events"."user_id" OR "friendships"."friend_id" = "events"."user_id"').
               where('"id_private" = ?', true))
-        @events = @events.union(Event.where(user_id: @user.id).joins('INNER JOIN "friendships" ON "friendships"."approved" = "t" AND "friendships"."user_id" = "events"."user_id"').
+        @events = @events.union(Event.where(user_id: @user.id).joins('INNER JOIN "friendships" ON "friendships"."approved" = \'t\' AND "friendships"."user_id" = "events"."user_id"').
               where('"friendships"."user_id" = ? OR "friendships"."friend_id" = ?', current_user.id, current_user.id).
               where('"id_private" = ?', true))
 

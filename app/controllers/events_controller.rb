@@ -10,7 +10,8 @@ class EventsController < ApplicationController
       scope = Event
       
       # Don't include events that have already ended
-      scope = scope.where('"EndDate" > ?', DateTime.now)
+      # hack: timezones need to be implemented.
+      scope = scope.where('"EndDate" >= ?', Time.now.in_time_zone('Pacific Time (US & Canada)').to_date)
       if params[:user_id]
         scope = scope.where('"user_id" = ?', params[:user_id])
       end
@@ -20,11 +21,11 @@ class EventsController < ApplicationController
         if !current_user.is_administrator?
           scope = scope.where('("id_private" != ? OR "user_id" = ?)', true, current_user.id)
 
-          @events = Event.joins('INNER JOIN "friendships" ON "friendships"."approved" = "t" AND "friendships"."user_id" = "events"."user_id"').
+          @events = Event.joins('INNER JOIN "friendships" ON "friendships"."approved" = \'t\' AND "friendships"."user_id" = "events"."user_id"').
             where('"friendships"."user_id" = ? OR "friendships"."friend_id" = ?', current_user.id, current_user.id).
             where('"id_private" = ?', true)
 
-          @events = @events.union(Event.joins('INNER JOIN "friendships" ON "friendships"."approved" = "t" AND "friendships"."user_id" = ' + current_user.id.to_s).
+          @events = @events.union(Event.joins('INNER JOIN "friendships" ON "friendships"."approved" = \'t\' AND "friendships"."user_id" = ' + current_user.id.to_s).
             where('"friendships"."user_id" = "events"."user_id" OR "friendships"."friend_id" = "events"."user_id"').
             where('"id_private" = ?', true))
         end
