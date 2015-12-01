@@ -3,7 +3,7 @@ require 'test_helper'
 class EventsControllerTest < ActionController::TestCase
   setup do
     @event = events(:newevent)
-    @privateevent = events(:private)
+    @privateevent = events(:notfriend_private)
   end
 
   test "should get index" do

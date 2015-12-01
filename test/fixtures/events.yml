@@ -44,7 +44,7 @@ notfriend_private:
   user_id: 3
   id_private: true
 
-private:
+public:
   Title: "New Event"
   Latitude: 15.123456
   Longitude: 90.123456
