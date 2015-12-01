@@ -4,8 +4,7 @@ Rails.application.routes.draw do
   resources :reports
 
   get 'admin' => 'admin#index'
-  root 'mapsview#welcome'
-  get 'map' => 'mapsview#new'
+  root 'mapsview#new'
 
   resources :events do
     resources :reports
